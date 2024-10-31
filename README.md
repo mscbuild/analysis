@@ -7,4 +7,7 @@
 HTML (Data visualization)
 
 # Usage
->Clone this repository to your local machine.  
+>Clone this repository to your local machine.
+ 
+>Modify the code to experiment with different visualizations and analyses
+
