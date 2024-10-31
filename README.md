@@ -10,4 +10,6 @@ HTML (Data visualization)
 >Clone this repository to your local machine.
  
 >Modify the code to experiment with different visualizations and analyses
+ 
+ ![](https://komarev.com/ghpvc/?username=mscbuild) 
 
