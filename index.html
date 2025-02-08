@@ -372,14 +372,64 @@ img {
   <h2 class="section__title-1">
     <span>Projects.</span>
   </h2>
-  <style> 
+  <style>/*===== PORTFOLIO =====*/
+.portfolio__nav {
+  text-align: center;
+  margin-bottom: var(--mb-3);
+}
+
+.portfolio__item {
+  margin: 0 var(--mb-2);
+  cursor: pointer;
+}
+
+.portfolio__content {
+  background-color: #fff;
+  border-radius: .5rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(174, 190, 205, .3);
+}
+
+.portfolio__img {
+  width: 100%;
+  transition: .4s;
+}
+
+.portfolio__data {
+  padding: 1.5rem;
+}
+
+.portfolio__subtitle {
+  font-size: var(--small-font-size);
+  color: var(--first-color-light);
+}
+
+.portfolio__title {
+  font-size: var(--h3-font-size);
+  color: var(--first-color);
+  margin: var(--mb-2) 0;
+}
+
+.portfolio__content:hover {
+  box-shadow: 0 6px 8px rgba(174, 190, 205, .4);
+}
+
+.portfolio__content:hover .portfolio__img {
+  transform: scale(1.07);
+}
+
+/*Active menu portfolio*/
+.active-portfolio {
+  color: var(--first-color-dark);
+  font-weight: var(--font-semi-bold);
+}</style> 
   <div class="portfolio__nav">
     <span class="portfolio__item active-portfolio" data-filter="all">All</span>
     <span class="portfolio__item" data-filter=".web">Web</span>
     <span class="portfolio__item" data-filter=".ux">UI/UX</span>
     <span class="portfolio__item" data-filter=".app">App</span>
   </div>
-</style>
+ 
   <div class="projects__container container grid">
     <article class="projects__card">
       <div class="projects__image">
