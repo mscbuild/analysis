@@ -1,1 +1,399 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+<meta charset="UTF-8">
+<title>Portfolio</title>
+<style>
+/*===== GOOGLE FONTS =====*/
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 
+/*===== VARIABLES CSS =====*/
+:root{
+  --header-height: 3rem;
+
+  /*===== Colors =====*/
+  --first-color: #3E0E12;
+  --first-color-dark: #2F0A0D;
+  --text-color: #524748;
+  --first-color-light: #7B6F71;
+  --first-color-lighten: #FBF9F9;
+
+  /*===== Font and typography =====*/
+  --body-font: 'Poppins', sans-serif;
+  --biggest-font-size: 2.5rem;
+  --h1-font-size: 1.5rem;
+  --h2-font-size: 1.25rem;
+  --h3-font-size: 1.125rem;
+  --normal-font-size: .938rem;
+  --small-font-size: .813rem;
+  --smaller-font-size: .75rem;
+
+  /*===== Font weight =====*/
+  --font-medium: 500;
+  --font-semi-bold: 600;
+  --font-bold: 700;
+
+  /*===== Margins =====*/
+  --mb-1: .5rem;
+  --mb-2: 1rem;
+  --mb-3: 1.5rem;
+  --mb-4: 2rem;
+  --mb-5: 2.5rem;
+  --mb-6: 3rem;
+
+  /*===== z index =====*/
+  --z-normal: 1;
+  --z-tooltip: 10;
+  --z-fixed: 100;
+}
+  
+@media screen and (min-width: 768px){
+  :root{
+    --biggest-font-size: 4.5rem;
+    --h1-font-size: 2.25rem;
+    --h2-font-size: 1.5rem;
+    --h3-font-size: 1.25rem;
+    --normal-font-size: 1rem;
+    --small-font-size: .875rem;
+    --smaller-font-size: .813rem;
+  }
+}
+
+/*===== BASE =====*/
+*,::before,::after{
+  box-sizing: border-box;
+}
+
+html{
+  scroll-behavior: smooth;
+}
+
+body{
+  margin: var(--header-height) 0 0 0;
+  font-family: var(--body-font);
+  font-size: var(--normal-font-size);
+  font-weight: var(--font-medium);
+  background-color: var(--first-color-lighten);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+h1,h2,h3,ul,p{
+  margin: 0;
+}
+
+h2,h3{
+  font-weight: var(--font-semi-bold);
+}
+
+ul{
+  padding: 0;
+  list-style: none;
+}
+
+a{
+  text-decoration: none;
+}
+
+img{
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/*===== CLASS CSS =====*/
+.section {
+  padding: 4rem 0 2rem;
+}
+
+.section-title, .section-subtitle {
+  text-align: center;
+}
+
+.section-title {
+  font-size: var(--h1-font-size);
+  color: var(--first-color);
+  margin-bottom: var(--mb-3);
+}
+
+.section-subtitle {
+  display: block;
+  font-size: var(--smaller-font-size);
+  font-weight: var(--font-semi-bold);
+}
+
+/*===== LAYOUT =====*/
+.bd-container {
+  max-width: 1024px;
+  width: calc(100% - 2rem);
+  margin-left: var(--mb-2);
+  margin-right: var(--mb-2);
+}
+
+.bd-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.l-header {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-fixed);
+  background-color: #000;
+}
+
+/*===== BUTTON =====*/
+.button {
+  display: inline-block;
+  background-color: var(--first-color);
+  color: var(--first-color-lighten);
+  padding: .75rem 1rem;
+  border-radius: .25rem;
+  transition: .3s;
+}
+
+.button:hover {
+  background-color: var(--first-color-dark);
+}
+
+.button-link {
+  background: none;
+  color: var(--first-color);
+  padding: 0;
+}
+
+.button-link:hover {
+  background: none;
+}
+
+/*===== PORTFOLIO =====*/
+.portfolio__nav {
+  text-align: center;
+  margin-bottom: var(--mb-3);
+}
+
+.portfolio__item {
+  margin: 0 var(--mb-2);
+  cursor: pointer;
+}
+
+.portfolio__content {
+  background-color: #fff;
+  border-radius: .5rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(174, 190, 205, .3);
+}
+
+.portfolio__img {
+  width: 100%;
+  transition: .4s;
+}
+
+.portfolio__data {
+  padding: 1.5rem;
+}
+
+.portfolio__subtitle {
+  font-size: var(--small-font-size);
+  color: var(--first-color-light);
+}
+
+.portfolio__title {
+  font-size: var(--h3-font-size);
+  color: var(--first-color);
+  margin: var(--mb-2) 0;
+}
+
+.portfolio__content:hover {
+  box-shadow: 0 6px 8px rgba(174, 190, 205, .4);
+}
+
+.portfolio__content:hover .portfolio__img {
+  transform: scale(1.07);
+}
+
+/*Active menu portfolio*/
+.active-portfolio {
+  color: var(--first-color-dark);
+  font-weight: var(--font-semi-bold);
+}
+
+/*===== MEDIA QUERIES =====*/
+@media screen and (min-width: 576px) {
+  .portfolio__container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 768px) {
+  body {
+    margin: 0;
+  }
+
+  section {
+    padding-top: 6rem;
+  }
+
+  .section-title {
+    margin-bottom: var(--mb-5);
+  }
+
+  .portfolio__container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .project__container {
+    padding: 4.5rem 0;
+  }
+
+  .project__data {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .project__icon, .project__title, .project__description {
+    margin-bottom: 0;
+  }
+
+  .project__icon {
+    font-size: 6rem;
+  }
+
+  .project__title {
+    font-size: 2.5rem;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .bd-container {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <!--===== PORTFOLIO =====-->
+<section class="portfolio section bd-container" id="portfolio">
+  <span class="section-subtitle">My recent work</span>
+  <h2 class="section-title">Portfolio</h2>
+
+  <div class="portfolio__nav">
+    <span class="portfolio__item active-portfolio" data-filter="all">All</span>
+    <span class="portfolio__item" data-filter=".web">Web</span>
+    <span class="portfolio__item" data-filter=".ux">UI/UX</span>
+    <span class="portfolio__item" data-filter=".app">App</span>
+  </div>
+
+  <div class="portfolio__container bd-grid">
+    <div class="portfolio__content mix web">
+      <a href="#" class=""><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MTMwMzcyMzh8&ixlib=rb-4.0.3&q=85" alt="Work 1" class="portfolio__img"></a>
+      <div class="portfolio__data">
+        <span class="portfolio__subtitle">Web development</span>
+        <a href="#">
+          <h2 class="portfolio__title">New portfolio of work done for a client.</h2>
+        </a>
+        <a href="#" class="button button-link">View detail</a>
+      </div>
+    </div>
+
+    <div class="portfolio__content mix web">
+      <a href="#" class=""><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MTMwMzcyMzh8&ixlib=rb-4.0.3&q=85" alt="Work 2" class="portfolio__img"></a>
+      <div class="portfolio__data">
+        <span class="portfolio__subtitle">Web development</span>
+        <a href="#">
+          <h2 class="portfolio__title">New portfolio of work done for a client.</h2>
+        </a>
+        <a href="#" class="button button-link">View detail</a>
+      </div>
+    </div>
+
+    <div class="portfolio__content mix ux">
+      <a href="#" class=""><img src="https://images.unsplash.com/photo-1646617747609-45b466ace9a6?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MTMwMzc0MjB8&ixlib=rb-4.0.3&q=85" alt="Work 3" class="portfolio__img"></a>
+      <div class="portfolio__data">
+        <span class="portfolio__subtitle">UX design</span>
+        <a href="#">
+          <h2 class="portfolio__title">New portfolio of work done for a client.</h2>
+        </a>
+        <a href="#" class="button button-link">View detail</a>
+      </div>
+    </div>
+
+    <div class="portfolio__content mix ux">
+      <a href="#" class=""><img src="https://images.unsplash.com/photo-1646617747609-45b466ace9a6?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MTMwMzc0MjB8&ixlib=rb-4.0.3&q=85" alt="Work 4" class="portfolio__img"></a>
+      <div class="portfolio__data">
+        <span class="portfolio__subtitle">UX design</span>
+        <a href="#">
+          <h2 class="portfolio__title">New portfolio of work done for a client.</h2>
+        </a>
+        <a href="#" class="button button-link">View detail</a>
+      </div>
+    </div>
+
+    <div class="portfolio__content mix app">
+      <a href="#" class=""><img src="https://images.unsplash.com/photo-1600856209809-8419414d351f?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MTMwMzc1MjJ8&ixlib=rb-4.0.3&q=85" alt="Work 5" class="portfolio__img"></a>
+      <div class="portfolio__data">
+        <span class="portfolio__subtitle">Mobile app</span>
+        <a href="#">
+          <h2 class="portfolio__title">New portfolio of work done for a client.</h2>
+        </a>
+        <a href="#" class="button button-link">View detail</a>
+      </div>
+    </div>
+
+    <div class="portfolio__content mix app">
+      <a href="#" class=""><img src="https://images.unsplash.com/photo-1600856209809-8419414d351f?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MTMwMzc1MjJ8&ixlib=rb-4.0.3&q=85" alt="Work 6" class="portfolio__img"></a>
+      <div class="portfolio__data">
+        <span class="portfolio__subtitle">Mobile app</span>
+        <a href="#">
+          <h2 class="portfolio__title">New portfolio of work done for a client.</h2>
+        </a>
+        <a href="#" class="button button-link">View detail</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MIXITUP FILTER ===== -->
+<!-- source : https://www.kunkalabs.com/mixitup/ -->
+<script src=""></script>
+  
+      <script id="rendered-js" >
+/*===== MIXITUP FILTER PORTFOLIO =====*/
+const mixer = mixitup('.portfolio__container', {
+  selectors: {
+    target: '.portfolio__content' },
+
+  animation: {
+    duration: 400 } });
+
+
+
+/* Link active portfolio */
+const linkPortfolio = document.querySelectorAll('.portfolio__item');
+
+function activePortfolio() {
+  if (linkPortfolio) {
+    linkPortfolio.forEach(l => l.classList.remove('active-portfolio'));
+    this.classList.add('active-portfolio');
+  }
+}
+linkPortfolio.forEach(l => l.addEventListener('click', activePortfolio));
+//# sourceURL=pen.js
+    </script>
+
+  
+</body>
+
+</html>
