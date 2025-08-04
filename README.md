@@ -51,9 +51,9 @@ This project is intended for anyone interested in learning how to apply Python a
 ### Python
 
 1. Clone the repository:
-   ```bash
+~~~bash
    git clone https://github.com/mscbuild/analysis.git
-  ```
+~~~
 # Examples
 
 Here are some examples of analyses included in the repository:
