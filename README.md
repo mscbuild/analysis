@@ -86,16 +86,11 @@ Here are some examples of analyses included in the repository:
 
 - Linear regression analysis
 
-### Key Sections Breakdown:
+# License
 
-1. **Overview**: Describes the purpose of the repository and general goals.
-2. **Technologies Used**: Lists the tools and libraries used in Python and R.
-3. **Installation**: Instructions for setting up the project environment in both Python and R.
-4. **Usage**: Details on how to run the notebooks and scripts.
-5. **Examples**: Provides insight into what kinds of data analysis tasks are performed.
-6. **Contributing**: Encourages others to contribute with clear guidelines.
-7. **License**: Specifies licensing information (MIT is used as an example).
-8. **Contact**: Provides contact details for inquiries.
+- This project is licensed under the MIT License - see the LICENSE file for details.
+
+ 
 
 Feel free to customize and expand it further as per your project needs!
 
