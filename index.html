@@ -176,6 +176,182 @@ img {
 .button:hover {
   background-color: var(--first-color);
 }
+  /*=============== HEADER & NAV ===============*/
+    .header {
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: var(--z-fixed);
+      background-color: var(--container-color);
+      transition: 0.4s;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .nav {
+      height: var(--header-height);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .nav__logo {
+      color: var(--title-color);
+      font-weight: var(--font-bold);
+      font-size: 1.5rem;
+    }
+    
+    .nav__link {
+      color: var(--text-color);
+      font-size: var(--small-font-size);
+      font-weight: 500;
+      margin: 0 1rem;
+      transition: color 0.4s;
+    }
+    
+    .nav__link:hover {
+      color: var(--first-color);
+    }
+    
+    .active {
+      color: var(--first-color);
+    }
+   
+    /*=============== HERO ===============*/
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 4rem 0;
+    }
+    
+    .hero__container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    
+    .hero__data {
+      max-width: 500px;
+    }
+    
+    .hero__title {
+      font-size: var(--h1-font-size);
+      margin-bottom: 1rem;
+    }
+    
+    .hero__description {
+      margin-bottom: 2rem;
+      color: var(--text-color);
+    }
+    
+    /*=============== SKILLS ===============*/
+    .skills {
+      padding: 4rem 0;
+      background-color: var(--container-color);
+    }
+    
+    .section__title-1 {
+      position: relative;
+      font-size: var(--h1-font-size);
+      width: max-content;
+      margin: 0.75rem auto 2rem;
+    }
+    
+    .section__title-1 span {
+      z-index: 5;
+      position: relative;
+    }
+    
+    .section__title-1::after {
+      content: "";
+      width: 40px;
+      height: 28px;
+      background-color: hsla(14, 98%, 50%, 0.2);
+      position: absolute;
+      top: -4px;
+      right: -8px;
+    }
+    
+    .skills__container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    
+    .skills__grid {
+      display: grid;
+      gap: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    
+    .skills__content {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .skills__title {
+      font-size: var(--h2-font-size);
+      margin-bottom: 1rem;
+      color: var(--title-color);
+    }
+    
+    .skills__list {
+      list-style: none;
+    }
+    
+    .skills__item {
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .skills__icon {
+      color: var(--first-color);
+      margin-right: 0.75rem;
+    }
+  /*=============== FOOTER ===============*/
+    .footer {
+      background-color: var(--black-color);
+      color: var(--white-color);
+      padding: 2rem 0;
+    }
+    
+    .footer__container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      text-align: center;
+    }
+    
+    .footer__social {
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+    
+    .social__link {
+      color: var(--white-color);
+      font-size: 1.5rem;
+      transition: color 0.4s;
+    }
+    
+    .social__link:hover {
+      color: var(--first-color);
+    }
+    
+    .footer__title {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    
+    .footer__copy {
+      font-size: var(--small-font-size);
+      opacity: 0.8;
+    }
 /*=============== PROJECTS ===============*/
 .projects {
   background-color: var(--container-color);
@@ -455,6 +631,54 @@ img {
   </ul>
 </div>
 
+ <!--=============== HERO ===============-->
+  <section class="hero" id="home">
+    <div class="hero__container">
+      <div class="hero__data">
+        <h1 class="hero__title">Data Analytics Portfolio</h1>
+        <p class="hero__description">I'm a data analyst passionate about transforming complex data into actionable insights. With expertise in Python, SQL, and data visualization, I help organizations make data-driven decisions.</p>
+        <a href="#projects" class="button">View My Work <i class="ri-arrow-right-line"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <!--=============== SKILLS ===============-->
+  <section class="skills" id="skills">
+    <div class="skills__container">
+      <h2 class="section__title-1">
+        <span>Skills.</span>
+      </h2>
+      <div class="skills__grid">
+        <div class="skills__content">
+          <h3 class="skills__title">Programming</h3>
+          <ul class="skills__list">
+            <li class="skills__item"><i class="ri-code-s-slash-line skills__icon"></i> Python</li>
+            <li class="skills__item"><i class="ri-database-2-line skills__icon"></i> SQL</li>
+            <li class="skills__item"><i class="ri-brackets-line skills__icon"></i> R</li>
+            <li class="skills__item"><i class="ri-code-box-line skills__icon"></i> JavaScript</li>
+          </ul>
+        </div>
+        <div class="skills__content">
+          <h3 class="skills__title">Data Analysis</h3>
+          <ul class="skills__list">
+            <li class="skills__item"><i class="ri-bar-chart-line skills__icon"></i> Data Cleaning</li>
+            <li class="skills__item"><i class="ri-search-2-line skills__icon"></i> Exploratory Analysis</li>
+            <li class="skills__item"><i class="ri-function-line skills__icon"></i> Statistical Analysis</li>
+            <li class="skills__item"><i class="ri-magic-line skills__icon"></i> Machine Learning</li>
+          </ul>
+        </div>
+        <div class="skills__content">
+          <h3 class="skills__title">Visualization</h3>
+          <ul class="skills__list">
+            <li class="skills__item"><i class="ri-pie-chart-line skills__icon"></i> Matplotlib</li>
+            <li class="skills__item"><i class="ri-bar-chart-grouped-line skills__icon"></i> Seaborn</li>
+            <li class="skills__item"><i class="ri-dashboard-line skills__icon"></i> Tableau</li>
+            <li class="skills__item"><i class="ri-line-chart-line skills__icon"></i> Power BI</li>
+           </ul>
+        </div>
+      </div>
+    </div>
+  </section>
 <!--==================== PROJECTS ====================-->
 <section class="projects section" id="projects">
   <h2 class="section__title-1">
@@ -878,6 +1102,19 @@ img {
   </div>
 </section>
 
+   <!--=============== FOOTER ===============-->
+  <footer class="footer">
+    <div class="footer__container">
+      <div class="footer__social">
+        <a href="#" class="social__link"><i class="ri-github-fill"></i></a>
+        <a href="#" class="social__link"><i class="ri-linkedin-box-fill"></i></a>
+        <a href="#" class="social__link"><i class="ri-twitter-fill"></i></a>
+        <a href="#" class="social__link"><i class="ri-dribbble-fill"></i></a>
+      </div>
+      <h3 class="footer__title">JRCK</h3>
+      <p class="footer__copy">© 2025 All rights reserved</p>
+    </div>
+  </footer>
 <script>
 // Mobile menu toggle
 const navMenu = document.getElementById('nav-menu-mobile');
