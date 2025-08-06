@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" >
-
 <head>
   <meta charset="UTF-8">
   <title>Projects</title>
@@ -8,11 +7,9 @@
 <style>
 /*=============== GOOGLE FONTS ===============*/
 @import url("https://fonts.googleapis.com/css2?family=Bai+Jamjuree:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
-
 /*=============== VARIABLES CSS ===============*/
 :root {
   --header-height: 3.5rem;
-
   /*========== Colors ==========*/
   /*Color mode HSL(hue, saturation, lightness)*/
   --first-color: hsl(14, 98%, 50%);
@@ -24,7 +21,6 @@
   --text-color-light: hsl(0, 0%, 64%);
   --body-color: hsl(0, 0%, 87%);
   --container-color: hsl(0, 0%, 83%);
-
   /*========== Font and typography ==========*/
   /*.5rem = 8px | 1rem = 16px ...*/
   --body-font: "Bai Jamjuree", sans-serif;
@@ -35,18 +31,15 @@
   --normal-font-size: 0.938rem;
   --small-font-size: 0.813rem;
   --smaller-font-size: 0.75rem;
-
   /*========== Font weight ==========*/
   --font-regular: 400;
   --font-medium: 500;
   --font-semi-bold: 600;
   --font-bold: 700;
-
   /*========== z index ==========*/
   --z-tooltip: 10;
   --z-fixed: 100;
 }
-
 /*========== Responsive typography ==========*/
 @media screen and (min-width: 1150px) {
   :root {
@@ -59,18 +52,15 @@
     --smaller-font-size: 0.813rem;
   }
 }
-
 /*=============== BASE ===============*/
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
 }
-
 html {
   scroll-behavior: smooth;
 }
-
 body {
   font-family: var(--body-font);
   font-size: var(--normal-font-size);
@@ -78,7 +68,6 @@ body {
   color: var(--text-color);
   transition: background-color .4s; /* Pour le Dark theme */
 }
-
 h1,
 h2,
 h3,
@@ -86,50 +75,41 @@ h4 {
   color: var(--title-color);
   font-weight: var(--font-bold);
 }
-
 ul {
   list-style: none;
 }
-
 a {
   text-decoration: none;
 }
-
 img {
   display: block;
   max-width: 100%;
   height: auto;
 }
-
 /*=============== THEME ===============*/
 .nav__buttons {
   display: flex;
   align-items: center;
   column-gap: 1rem;
 }
-
 .change-theme {
   font-size: 1.25rem;
   color: var(--title-color);
   cursor: pointer;
   transition: color .3s;
 }
-
 /*=============== REUSABLE CSS CLASSES ===============*/
 .container {
   max-width: 1120px;
   margin-inline: 1.5rem;
 }
-
 .grid {
   display: grid;
   gap: 1.5rem;
 }
-
 .section {
   padding-block: 4rem 2rem;
 }
-
 .section__title-1,
 .section__title-2 {
   position: relative;
@@ -137,13 +117,11 @@ img {
   width: max-content;
   margin: 0.75rem auto 2rem;
 }
-
 .section__title-1 span,
 .section__title-2 span {
   z-index: 5;
   position: relative;
 }
-
 .section__title-1::after,
 .section__title-2::after {
   content: "";
@@ -154,12 +132,10 @@ img {
   top: -4px;
   right: -8px;
 }
-
 .section__title-2::after {
   top: initial;
   bottom: -4px;
 }
-
 .geometric-box {
   position: absolute;
   width: 20px;
@@ -167,7 +143,6 @@ img {
   background-color: var(--first-color);
   rotate: -30deg;
 }
-
 .geometric-box::after {
   content: "";
   position: absolute;
@@ -177,11 +152,9 @@ img {
   left: -5px;
   top: -5px;
 }
-
 .main {
   overflow: hidden; /* For animation ScrollReveal */
 }
-
 /*=============== BUTTON ===============*/
 .button {
   display: flex;
@@ -189,7 +162,6 @@ img {
   justify-content: center;
   column-gap: 0.5rem;
 }
-
 .button {
   background-color: var(--black-color);
   padding: 1.1rem 1.5rem;
@@ -198,52 +170,42 @@ img {
   border-radius: 0.75rem;
   transition: background-color 0.4s;
 }
-
 .button i {
   font-size: 1.25rem;
 }
-
 .button:hover {
   background-color: var(--first-color);
 }
-
 /*=============== PROJECTS ===============*/
 .projects {
   background-color: var(--container-color);
   transition: background-color 0.4s;
 }
-
 .projects__container {
   row-gap: 2rem;
 }
-
 .projects__card {
   padding: 1rem 1rem 2rem;
   border-radius: 0.75rem;
   transition: background-color 0.4s;
 }
-
 .projects__image {
   position: relative;
   margin-bottom: 0.75rem;
 }
-
 .projects__img {
   border-radius: 0.75rem;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 8px 24px;
 }
-
 .projects__button {
   position: absolute;
   right: 1rem;
   bottom: -1.5rem;
   padding: 1rem;
 }
-
 .projects__content {
   margin-bottom: 1.25rem;
 }
-
 .projects__subtitle {
   position: relative;
   display: inline-block;
@@ -253,7 +215,6 @@ img {
   margin-bottom: 0.75rem;
   padding-left: 1.75rem;
 }
-
 .projects__subtitle::after {
   content: "";
   width: 20px;
@@ -263,18 +224,15 @@ img {
   left: 0;
   top: 50%;
 }
-
 .projects__title {
   font-size: var(--h3-font-size);
   margin-bottom: 0.75rem;
 }
-
 .projects__buttons {
   display: flex;
   align-items: center;
   column-gap: 1rem;
 }
-
 .projects__link {
   display: flex;
   align-items: center;
@@ -284,13 +242,11 @@ img {
   font-weight: var(--font-medium);
   transition: color 0.4s;
 }
-
 .projects__link i {
   font-size: 1rem;
   color: var(--title-color);
   transition: color 0.4s;
 }
-
 .projects__link:hover,
 .projects__link:hover i {
   color: var(--first-color);
@@ -299,6 +255,102 @@ img {
   background-color: var(--white-color);
   border-radius: 0.75rem;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 8px 24px;
+}
+
+/*=============== HEADER & NAV ===============*/
+.header {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-fixed);
+  background-color: var(--container-color);
+  transition: 0.4s;
+}
+
+.nav {
+  height: var(--header-height);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav__logo {
+  color: var(--title-color);
+  font-weight: var(--font-bold);
+  font-size: 1.5rem;
+}
+
+.nav__menu {
+  display: flex;
+  align-items: center;
+}
+
+.nav__list {
+  display: flex;
+  column-gap: 2rem;
+}
+
+.nav__link {
+  color: var(--text-color);
+  font-size: var(--small-font-size);
+  font-weight: var(--font-medium);
+  transition: color 0.4s;
+}
+
+.nav__link:hover {
+  color: var(--first-color);
+}
+
+.nav__toggle {
+  display: none;
+  font-size: 1.5rem;
+  color: var(--title-color);
+  cursor: pointer;
+}
+
+/* Mobile menu */
+.nav__menu--mobile {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 70%;
+  height: 100vh;
+  background-color: var(--container-color);
+  padding: 4rem 2rem;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+  transition: 0.4s;
+  z-index: var(--z-fixed);
+}
+
+.nav__menu--mobile.active {
+  right: 0;
+}
+
+.nav__list--mobile {
+  display: flex;
+  flex-direction: column;
+  row-gap: 2rem;
+}
+
+.nav__link--mobile {
+  color: var(--text-color);
+  font-size: var(--h2-font-size);
+  font-weight: var(--font-medium);
+  transition: color 0.4s;
+}
+
+.nav__link--mobile:hover {
+  color: var(--first-color);
+}
+
+.nav__close {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-size: 1.5rem;
+  color: var(--title-color);
+  cursor: pointer;
 }
 
 /*=============== MEDIA QUERIES ===============*/
@@ -320,6 +372,17 @@ img {
 @media screen and (min-width: 768px) {
   .projects__container {
     grid-template-columns: repeat(2, 350px);
+  }
+}
+
+/* Mobile menu breakpoint */
+@media screen and (max-width: 767px) {
+  .nav__toggle {
+    display: block;
+  }
+  
+  .nav__menu {
+    display: none;
   }
 }
 
@@ -354,18 +417,43 @@ img {
   }
 }
 </style>
-
   <script>
   window.console = window.console || function(t) {};
 </script>
-
-  
-  
 </head>
-
 <body translate="no">
   <!--=============== REMIXICONS ===============-->
 <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+<!--=============== HEADER ===============-->
+<header class="header">
+  <nav class="nav container">
+    <a href="#" class="nav__logo">Portfolio</a>
+    
+    <!-- Menu icon -->
+    <div class="nav__toggle" id="nav-toggle">
+      <i class="ri-menu-line"></i>
+    </div>
+    
+    <!-- Menu -->
+    <div class="nav__menu" id="nav-menu">
+      <ul class="nav__list">
+        <li><a href="#" class="nav__link">Home</a></li>
+        <li><a href="#projects" class="nav__link">Projects</a></li>
+        <li><a href="https://www.linkedin.com/in/jurijsrck" class="nav__link">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<!-- Mobile menu -->
+<div class="nav__menu--mobile" id="nav-menu-mobile">
+  <i class="ri-close-line nav__close" id="nav-close"></i>
+  <ul class="nav__list--mobile">
+    <li><a href="#" class="nav__link--mobile">Home</a></li>
+    <li><a href="#projects" class="nav__link--mobile">Projects</a></li>
+    <li><a href="https://www.linkedin.com/in/jurijsrck" class="nav__link--mobile">Contact</a></li>
+  </ul>
+</div>
 
 <!--==================== PROJECTS ====================-->
 <section class="projects section" id="projects">
@@ -376,142 +464,113 @@ img {
     <article class="projects__card">
       <div class="projects__image">
         <img src="img/569.png" alt="image" class="projects__img">
-
         <a href="https://www.kaggle.com/code/jurijsruko/automating-the-job-search-linkedin" class="projects__button button">
           <i class="ri-arrow-right-up-line"></i>
         </a>
       </div>
-
       <div class="projects__content">
         <h3 class="projects__subtitle">Analysis</h3>
         <h2 class="projects__title">Automating the Job Search</h2>
-
         <p class="projects__description">
           Project for automated job search on the platform "Linkedin" using code Python.
         </p>
       </div>
-
       <div class="projects__buttons">
         <a href="https://github.com/mscbuild/analysis/blob/main/linkedin-jobs-scraper.ipynb" target="_blank" class="projects__link">
           <i class="ri-github-line"></i> Source Code
         </a>
-
         <a href="https://www.kaggle.com/code/jurijsruko/automating-the-job-search-linkedin" target="_blank" class="projects__link">
           <i class="ri-dribbble-line"></i> View
         </a>
       </div>
     </article>
-
     <article class="projects__card">
       <div class="projects__image">
         <img src="img/567.png" alt="image" class="projects__img">
-
         <a href="https://www.kaggle.com/code/jurijsruko/credit-card-approval-prediction-classification" class="projects__button button">
           <i class="ri-arrow-right-up-line"></i>
         </a>
       </div>
-
       <div class="projects__content">
         <h3 class="projects__subtitle">Analysis</h3>
         <h2 class="projects__title">Credit Card Prediction</h2>
-
         <p class="projects__description">
          Project Credit card approval prediction classification. Analytics Project 
         </p>
       </div>
-
       <div class="projects__buttons">
         <a href="https://www.kaggle.com/code/jurijsruko/credit-card-approval-prediction-classification" target="_blank" class="projects__link">
           <i class="ri-github-line"></i> Source Code
         </a>
-
         <a href="https://www.kaggle.com/code/jurijsruko/credit-card-approval-prediction-classification" target="_blank" class="projects__link">
           <i class="ri-dribbble-line"></i> View
         </a>
       </div>
     </article>
-
     <article class="projects__card">
       <div class="projects__image">
         <img src="img/78.png" alt="image" class="projects__img">
-
         <a href="https://www.kaggle.com/code/jurijsruko/netflix-shows-and-movies" class="projects__button button">
           <i class="ri-arrow-right-up-line"></i>
         </a>
       </div>
-
       <div class="projects__content">
         <h3 class="projects__subtitle">Analysis</h3>
         <h2 class="projects__title">Netflix Shows and Movies</h2>
-
         <p class="projects__description">
           Research Analysis Project Netflix Shows and Movies. 
         </p>
       </div>
-
       <div class="projects__buttons">
         <a href="https://www.kaggle.com/code/jurijsruko/netflix-shows-and-movies" target="_blank" class="projects__link">
           <i class="ri-github-line"></i> Source Code
         </a>
-
         <a href="https://www.kaggle.com/code/jurijsruko/netflix-shows-and-movies" target="_blank" class="projects__link">
           <i class="ri-dribbble-line"></i> View
         </a>
       </div>
     </article>
-
     <article class="projects__card">
       <div class="projects__image">
         <img src="img/567.png" alt="image" class="projects__img">
-
         <a href="https://mscbuild.github.io/about/file_top100.html" class="projects__button button">
           <i class="ri-arrow-right-up-line"></i>
         </a>
       </div>
-
       <div class="projects__content">
         <h3 class="projects__subtitle">Analysis</h3>
         <h2 class="projects__title">Top 1000 Wealthiest People</h2>
-
         <p class="projects__description">
          "Top 1000 Wealthiest People" Research Project (2024).  
         </p>
       </div>
-
       <div class="projects__buttons">
         <a href="https://github.com/mscbuild/analysis/blob/main/persons-wealthiest.ipynb" target="_blank" class="projects__link">
           <i class="ri-github-line"></i> Source Code
         </a>
-
         <a href="https://www.kaggle.com/code/jurijsruko/persons-wealthiest" target="_blank" class="projects__link">
           <i class="ri-dribbble-line"></i> View
         </a>
       </div>
     </article>
-
     <article class="projects__card">
       <div class="projects__image">
         <img src="img/569.png" alt="image" class="projects__img">
-
         <a href="https://www.kaggle.com/code/jurijsruko/top-1000-companies-details" class="projects__button button">
           <i class="ri-arrow-right-up-line"></i>
         </a>
       </div>
-
       <div class="projects__content">
         <h3 class="projects__subtitle">Analysis</h3>
         <h2 class="projects__title">Top 1000 Companies Details</h2>
-
         <p class="projects__description">
          Top 1000 Companies Details Research Project. Analytics Project 
         </p>
       </div>
-
       <div class="projects__buttons">
         <a href="https://github.com/mscbuild/analysis/blob/main/top-1000-global-tech-companies-by-market-cap-2024.ipynb" target="_blank" class="projects__link">
           <i class="ri-github-line"></i> Source Code
         </a>
-
         <a href="https://www.kaggle.com/code/jurijsruko/top-1000-companies-details" target="_blank" class="projects__link">
           <i class="ri-dribbble-line"></i> View
         </a>
@@ -520,26 +579,21 @@ img {
      <article class="projects__card">
       <div class="projects__image">
         <img src="img/79.png" alt="image" class="projects__img">
-
         <a href="https://www.kaggle.com/code/jurijsruko/capstone-proyect" class="projects__button button">
           <i class="ri-arrow-right-up-line"></i>
         </a>
       </div>
-
       <div class="projects__content">
         <h3 class="projects__subtitle">Analysis</h3>
         <h2 class="projects__title">Cyclistic Bike Share</h2>
-
         <p class="projects__description">
           Bicycle Sharing Research Project. Exploratory Analysis
         </p>
       </div>
-
       <div class="projects__buttons">
         <a href="https://github.com/mscbuild/analysis/blob/main/capstone-proyect.ipynb" target="_blank" class="projects__link">
           <i class="ri-github-line"></i> Source Code
         </a>
-
         <a href="https://www.kaggle.com/code/jurijsruko/capstone-proyect" target="_blank" class="projects__link">
           <i class="ri-dribbble-line"></i> View
         </a>
@@ -548,56 +602,44 @@ img {
    <article class="projects__card">
       <div class="projects__image">
         <img src="img/1.png" alt="image" class="projects__img">
-
         <a href="https://dievamantinieki.lv" class="projects__button button">
           <i class="ri-arrow-right-up-line"></i>
         </a>
       </div>
-
       <div class="projects__content">
         <h3 class="projects__subtitle">Web</h3>
         <h2 class="projects__title">Website church</h2>
-
         <p class="projects__description">
          Developed a church website to showcase web development skills with a custom design and animation effects.
-          
        </p>
       </div>
-
       <div class="projects__buttons">
         <a href="https://dievamantinieki.lv" target="_blank" class="projects__link">
           <i class="ri-github-line"></i> Source Code
         </a>
-
         <a href="https://dievamantinieki.lv" target="_blank" class="projects__link">
           <i class="ri-dribbble-line"></i> View
         </a>
       </div>
     </article>
-
     <article class="projects__card">
       <div class="projects__image">
         <img src="img/3.png" alt="image" class="projects__img">
-
         <a href="https://mscbuild.github.io/analysis/adminpan.html" class="projects__button button">
           <i class="ri-arrow-right-up-line"></i>
         </a>
       </div>
-
       <div class="projects__content">
         <h3 class="projects__subtitle">Web</h3>
         <h2 class="projects__title">Website</h2>
-
         <p class="projects__description">
          Project for creating a site for the panel administrator.
         </p>
       </div>
-
       <div class="projects__buttons">
         <a href="https://github.com/mscbuild/analysis/blob/main/adminpan.html" target="_blank" class="projects__link">
           <i class="ri-github-line"></i> Source Code
         </a>
-
         <a href="https://mscbuild.github.io/analysis/adminpan.html" target="_blank" class="projects__link">
           <i class="ri-dribbble-line"></i> View
         </a>
@@ -606,26 +648,21 @@ img {
      <article class="projects__card">
       <div class="projects__image">
         <img src="img/4.png" alt="image" class="projects__img">
-
         <a href="https://mscbuild.github.io/about/music.html" class="projects__button button">
           <i class="ri-arrow-right-up-line"></i>
         </a>
       </div>
-
       <div class="projects__content">
         <h3 class="projects__subtitle">Web</h3>
         <h2 class="projects__title">Website</h2>
-
         <p class="projects__description">
          Project for creating a music website.
         </p>
       </div>
-
       <div class="projects__buttons">
         <a href="https://mscbuild.github.io/about/music.html" target="_blank" class="projects__link">
           <i class="ri-github-line"></i> Source Code
         </a>
-
         <a href="https://mscbuild.github.io/about/music.html" target="_blank" class="projects__link">
           <i class="ri-dribbble-line"></i> View
         </a>
@@ -634,55 +671,44 @@ img {
     <article class="projects__card">
       <div class="projects__image">
         <img src="img/112.png" alt="image" class="projects__img">
-
         <a href="https://mscbuild.github.io/about/" class="projects__button button">
           <i class="ri-arrow-right-up-line"></i>
         </a>
       </div>
-
       <div class="projects__content">
         <h3 class="projects__subtitle">Web</h3>
         <h2 class="projects__title">Website</h2>
-
         <p class="projects__description">
          Project to create a website portfolio 
         </p>
       </div>
-
       <div class="projects__buttons">
         <a href="https://mscbuild.github.io/about/" target="_blank" class="projects__link">
           <i class="ri-github-line"></i> Source Code
         </a>
-
         <a href="https://mscbuild.github.io/about/" target="_blank" class="projects__link">
           <i class="ri-dribbble-line"></i> View
         </a>
       </div>
     </article>
-
     <article class="projects__card">
       <div class="projects__image">
         <img src="img/5.png" alt="image" class="projects__img">
-
         <a href="https://ecommerce-t2rn.onrender.com" class="projects__button button">
           <i class="ri-arrow-right-up-line"></i>
         </a>
       </div>
-
       <div class="projects__content">
         <h3 class="projects__subtitle">Web</h3>
         <h2 class="projects__title">Website shop</h2>
-
         <p class="projects__description">
          Project for creating a site for e-comerce shop with NextJS.
         </p>
       </div>
-
       <div class="projects__buttons">
         <a href="https://github.com/mscbuild/ecommerce-nextjs" target="_blank" class="projects__link">
           <i class="ri-github-line"></i> Source Code
         </a>
-
         <a href="https://ecommerce-t2rn.onrender.com/" target="_blank" class="projects__link">
           <i class="ri-dribbble-line"></i> View
         </a>
@@ -691,26 +717,21 @@ img {
      <article class="projects__card">
       <div class="projects__image">
         <img src="img/75.png" alt="image" class="projects__img">
-
         <a href="https://www.figma.com/proto/MUqnKD0EPRdOPHcngzG57m/E-commerce_app?node-id=138-741" class="projects__button button">
           <i class="ri-arrow-right-up-line"></i>
         </a>
       </div>
-
       <div class="projects__content">
         <h3 class="projects__subtitle">App</h3>
         <h2 class="projects__title">UX/UI design</h2>
-
         <p class="projects__description">
          Agile app is a modern, responsive eCommerce web and mobile application tailored for gamers.  
         </p>
       </div>
-
       <div class="projects__buttons">
         <a href="https://www.figma.com/proto/MUqnKD0EPRdOPHcngzG57m/E-commerce_app?node-id=138-741" target="_blank" class="projects__link">
           <i class="ri-github-line"></i> Source Code
         </a>
-
         <a href="https://www.behance.net/gallery/228332971/E-commerce-app" target="_blank" class="projects__link">
           <i class="ri-dribbble-line"></i> View
         </a>
@@ -719,55 +740,44 @@ img {
         <article class="projects__card">
       <div class="projects__image">
         <img src="img/791.png" alt="image" class="projects__img">
-
         <a href="https://www.behance.net/gallery/228404099/E-commerce-bussiness-design" class="projects__button button">
           <i class="ri-arrow-right-up-line"></i>
         </a>
       </div>
-
       <div class="projects__content">
         <h3 class="projects__subtitle">UI/UX design</h3>
         <h2 class="projects__title">Web</h2>
-
         <p class="projects__description">
          Project to create a website e-commerce   
         </p>
       </div>
-
       <div class="projects__buttons">
         <a href="https://www.behance.net/gallery/228404099/E-commerce-bussiness-design" target="_blank" class="projects__link">
           <i class="ri-github-line"></i> Source Code
         </a>
-
         <a href="https://www.behance.net/gallery/228404099/E-commerce-bussiness-design" target="_blank" class="projects__link">
           <i class="ri-dribbble-line"></i> View
         </a>
       </div>
     </article>
-
     <article class="projects__card">
       <div class="projects__image">
         <img src="img/790.png" alt="image" class="projects__img">
-
         <a href="https://www.behance.net/gallery/228505741/Modern-and-minimalist-style-in-the-interior-design" class="projects__button button">
           <i class="ri-arrow-right-up-line"></i>
         </a>
       </div>
-
       <div class="projects__content">
         <h3 class="projects__subtitle">UI/UX design</h3>
         <h2 class="projects__title">Web</h2>
-
         <p class="projects__description">
          Project for creating web site e-commerce
         </p>
       </div>
-
       <div class="projects__buttons">
         <a href="https://www.behance.net/gallery/228505741/Modern-and-minimalist-style-in-the-interior-design" target="_blank" class="projects__link">
           <i class="ri-github-line"></i> Source Code
         </a>
-
         <a href="https://www.behance.net/gallery/228505741/Modern-and-minimalist-style-in-the-interior-design" target="_blank" class="projects__link">
           <i class="ri-dribbble-line"></i> View
         </a>
@@ -776,84 +786,67 @@ img {
      <article class="projects__card">
       <div class="projects__image">
         <img src="img/800.png" alt="image" class="projects__img">
- 
         <a href="https://www.behance.net/gallery/228582355/PORTFOLIO-Graphic-Designer" class="projects__button button">
           <i class="ri-arrow-right-up-line"></i>
         </a>
       </div>
-
       <div class="projects__content">
         <h3 class="projects__subtitle">UI/UX design</h3>
         <h2 class="projects__title">Potfolio</h2>
-
         <p class="projects__description">
          Portfolio | Graphic design
         </p>
       </div>
-
       <div class="projects__buttons">
         <a href="https://www.behance.net/gallery/228582355/PORTFOLIO-Graphic-Designer" target="_blank" class="projects__link">
           <i class="ri-github-line"></i> Source Code
         </a>
-
         <a href="https://www.behance.net/gallery/228582355/PORTFOLIO-Graphic-Designer" target="_blank" class="projects__link">
           <i class="ri-dribbble-line"></i> View
         </a>
       </div>
     </article> 
-
      <article class="projects__card">
       <div class="projects__image">
         <img src="img/901.png" alt="image" class="projects__img">
-
         <a href="https://www.behance.net/gallery/228570639/MSC-Logo-Design-Branding" class="projects__button button">
           <i class="ri-arrow-right-up-line"></i>
         </a>
       </div>
-
       <div class="projects__content">
         <h3 class="projects__subtitle">Design</h3>
         <h2 class="projects__title">Logo&Branding</h2>
-
         <p class="projects__description">
          Project to create Logo Design&Branding  
         </p>
       </div>
-
       <div class="projects__buttons">
         <a href="https://www.behance.net/gallery/228570639/MSC-Logo-Design-Branding" target="_blank" class="projects__link">
           <i class="ri-github-line"></i> Source Code
         </a>
-
         <a href="https://www.behance.net/gallery/228570639/MSC-Logo-Design-Branding" target="_blank" class="projects__link">
           <i class="ri-dribbble-line"></i> View
         </a>
       </div>
     </article>
-
     <article class="projects__card">
       <div class="projects__image">
         <img src="img/6.png" alt="image" class="projects__img">
-
         <a href="https://files.inbox.lv/shared/file/2d6c0eb46200e0afed9a0e8bd383199e0bdfa591" class="projects__button button">
           <i class="ri-arrow-right-up-line"></i>
         </a>
       </div>
-
       <div class="projects__content">
         <h3 class="projects__subtitle">App</h3>
         <h2 class="projects__title">Books</h2>
-
         <p class="projects__description">
          Project for creating Android app
         </p>
       </div>
-
       <div class="projects__buttons">
         <a href="https://files.inbox.lv/shared/file/2d6c0eb46200e0afed9a0e8bd383199e0bdfa591"" target="_blank" class="projects__link">
           <i class="ri-github-line"></i> Source Code
         </a>
-
         <a href="https://files.inbox.lv/shared/file/2d6c0eb46200e0afed9a0e8bd383199e0bdfa591" target="_blank" class="projects__link">
           <i class="ri-dribbble-line"></i> View
         </a>
@@ -862,26 +855,21 @@ img {
      <article class="projects__card">
       <div class="projects__image">
         <img src="img/6.png" alt="image" class="projects__img">
- 
         <a href="https://files.inbox.lv/shared/file/fdeb9696450f6c127e5da136c1fab60f47697400" class="projects__button button">
           <i class="ri-arrow-right-up-line"></i>
         </a>
       </div>
-
       <div class="projects__content">
         <h3 class="projects__subtitle">App</h3>
         <h2 class="projects__title">Fishing Game </h2>
-
         <p class="projects__description">
           The Android Game Development 
         </p>
       </div>
-
       <div class="projects__buttons">
         <a href="https://files.inbox.lv/shared/file/fdeb9696450f6c127e5da136c1fab60f47697400" target="_blank" class="projects__link">
           <i class="ri-github-line"></i> Source Code
         </a>
-
         <a href="https://files.inbox.lv/shared/file/fdeb9696450f6c127e5da136c1fab60f47697400" target="_blank" class="projects__link">
           <i class="ri-dribbble-line"></i> View
         </a>
@@ -889,9 +877,33 @@ img {
     </article> 
   </div>
 </section>
-  
-  
-  
-</body>
 
-</html
+<script>
+// Mobile menu toggle
+const navMenu = document.getElementById('nav-menu-mobile');
+const navToggle = document.getElementById('nav-toggle');
+const navClose = document.getElementById('nav-close');
+
+// Show mobile menu
+if(navToggle) {
+  navToggle.addEventListener('click', () => {
+    navMenu.classList.add('active');
+  });
+}
+
+// Hide mobile menu
+if(navClose) {
+  navClose.addEventListener('click', () => {
+    navMenu.classList.remove('active');
+  });
+}
+
+// Close menu when clicking on a nav link
+document.querySelectorAll('.nav__link--mobile').forEach(link => {
+  link.addEventListener('click', () => {
+    navMenu.classList.remove('active');
+  });
+});
+</script>
+</body>
+</html>
