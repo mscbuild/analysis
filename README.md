@@ -92,7 +92,7 @@ Here are some examples of analyses included in the repository:
 
  
 
-Feel free to customize and expand it further as per your project needs!
+- Feel free to customize and expand it further as per your project needs!
 
 
 
