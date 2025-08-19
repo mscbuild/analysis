@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Data Analytics Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #3b82f6;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon i {
+            color: white;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            margin-left: 16px;
+        }
+
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .logo-text p {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        select, button {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        select {
+            background: white;
+        }
+
+        button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        /* Main Content */
+        main {
+            padding: 32px 0;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            padding: 24px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .kpi-info h3 {
+            font-size: 14px;
+            font-weight: 500;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .kpi-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .kpi-trend {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .trend-up {
+            color: #10b981;
+        }
+
+        .trend-down {
+            color: #ef4444;
+        }
+
+        .kpi-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: #dbeafe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .kpi-icon i {
+            color: #3b82f6;
+            font-size: 24px;
+        }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            padding: 24px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .chart-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .chart-legend {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        /* Additional Charts */
+        .additional-charts {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .pie-chart-container {
+            height: 250px;
+            position: relative;
+        }
+
+        .metrics-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            padding: 24px;
+        }
+
+        .metrics-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 24px;
+        }
+
+        .metric-item {
+            margin-bottom: 24px;
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .metric-header span {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .metric-header span:last-child {
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        /* Recent Activity */
+        .activity-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            margin-top: 32px;
+        }
+
+        .activity-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .activity-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .activity-list {
+            padding: 24px;
+        }
+
+        .activity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-content {
+            display: flex;
+            align-items: center;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+        }
+
+        .icon-blue {
+            background: #dbeafe;
+            color: #3b82f6;
+        }
+
+        .icon-green {
+            background: #dcfce7;
+            color: #10b981;
+        }
+
+        .icon-purple {
+            background: #ede9fe;
+            color: #8b5cf6;
+        }
+
+        .icon-orange {
+            background: #ffedd5;
+            color: #f97316;
+        }
+
+        .icon-gray {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .activity-text h4 {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .activity-text p {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        .activity-time {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .additional-charts {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>Data Analytics Dashboard</h1>
+                        <p>Business Intelligence & Analytics</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <select id="period-select">
+                        <option value="day">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month" selected>This Month</option>
+                        <option value="quarter">This Quarter</option>
+                        <option value="year">This Year</option>
+                    </select>
+                    <button class="btn-primary" id="refresh-btn">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                    <button class="btn-secondary">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <div class="kpi-info">
+                        <h3>Total Revenue</h3>
+                        <div class="kpi-value">$45,231</div>
+                        <div class="kpi-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+12.5%</span>
+                        </div>
+                    </div>
+                    <div class="kpi-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <div class="kpi-info">
+                        <h3>Active Users</h3>
+                        <div class="kpi-value">12,458</div>
+                        <div class="kpi-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+8.2%</span>
+                        </div>
+                    </div>
+                    <div class="kpi-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
+          <div class="kpi-card">
+                <div class="kpi-header">
+                    <div class="kpi-info">
+                        <h3>Active Companies</h3>
+                        <div class="kpi-value">12</div>
+                        <div class="kpi-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+2.4%</span>
+                        </div>
+                    </div>
+                    <div class="kpi-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                </div>
+            </div>
+          <div class="kpi-card">
+                <div class="kpi-header">
+                    <div class="kpi-info">
+                        <h3>Total Visits</h3>
+                        <div class="kpi-value">11,458,789</div>
+                        <div class="kpi-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+12.4%</span>
+                        </div>
+                    </div>
+                    <div class="kpi-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <div class="kpi-info">
+                        <h3>Total Orders</h3>
+                        <div class="kpi-value">1,234</div>
+                        <div class="kpi-trend trend-down">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>-2.4%</span>
+                        </div>
+                    </div>
+                    <div class="kpi-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <div class="kpi-info">
+                        <h3>Page Views</h3>
+                        <div class="kpi-value">89,456</div>
+                        <div class="kpi-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+15.3%</span>
+                        </div>
+                    </div>
+                    <div class="kpi-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Revenue & Profit</h3>
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #3b82f6;"></div>
+                            <span>Revenue</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #10b981;"></div>
+                            <span>Profit</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>User Activity</h3>
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #8b5cf6;"></div>
+                            <span>Active Users</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="userChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Charts -->
+        <div class="additional-charts">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Sales Distribution</h3>
+                </div>
+                <div class="pie-chart-container">
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="metrics-card">
+                <h3>Performance Metrics</h3>
+                <div class="metric-item">
+                    <div class="metric-header">
+                        <span>Conversion Rate</span>
+                        <span>24.8%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 24.8%; background: #3b82f6;"></div>
+                    </div>
+                </div>
+                
+                <div class="metric-item">
+                    <div class="metric-header">
+                        <span>Customer Retention</span>
+                        <span>78.3%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 78.3%; background: #10b981;"></div>
+                    </div>
+                </div>
+                
+                <div class="metric-item">
+                    <div class="metric-header">
+                        <span>Avg. Order Value</span>
+                        <span>$127.42</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%; background: #8b5cf6;"></div>
+                    </div>
+                </div>
+                
+                <div class="metric-item">
+                    <div class="metric-header">
+                        <span>Customer Satisfaction</span>
+                        <span>4.7/5.0</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 94%; background: #f59e0b;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <h3>Recent Activity</h3>
+            </div>
+            <div class="activity-list">
+                <div class="activity-item">
+                    <div class="activity-content">
+                        <div class="activity-icon icon-blue">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="activity-text">
+                            <h4>New user registered</h4>
+                            <p>John Smith</p>
+                        </div>
+                    </div>
+                    <div class="activity-time">2 minutes ago</div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-content">
+                        <div class="activity-icon icon-green">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="activity-text">
+                            <h4>Order completed</h4>
+                            <p>Sarah Johnson</p>
+                        </div>
+                    </div>
+                    <div class="activity-time">15 minutes ago</div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-content">
+                        <div class="activity-icon icon-purple">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="activity-text">
+                            <h4>Payment processed</h4>
+                            <p>Mike Davis</p>
+                        </div>
+                    </div>
+                    <div class="activity-time">1 hour ago</div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-content">
+                        <div class="activity-icon icon-orange">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="activity-text">
+                            <h4>New product added</h4>
+                            <p>Emma Wilson</p>
+                        </div>
+                    </div>
+                    <div class="activity-time">2 hours ago</div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-content">
+                        <div class="activity-icon icon-gray">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="activity-text">
+                            <h4>Report generated</h4>
+                            <p>Alex Brown</p>
+                        </div>
+                    </div>
+                    <div class="activity-time">3 hours ago</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize charts when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Revenue Chart
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            const revenueChart = new Chart(revenueCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [
+                        {
+                            label: 'Revenue',
+                            data: [4000, 3000, 9800, 3908, 4800, 3800, 4300],
+                            backgroundColor: '#3b82f6',
+                            borderColor: '#3b82f6',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Profit',
+                            data: [2400, 1398, 2000, 2780, 1890, 2390, 3490],
+                            backgroundColor: '#10b981',
+                            borderColor: '#10b981',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // User Activity Chart
+            const userCtx = document.getElementById('userChart').getContext('2d');
+            const userChart = new Chart(userCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Active Users',
+                        data: [1200, 1900, 1500, 2100, 1800, 2400, 2200],
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Sales Distribution Chart
+            const salesCtx = document.getElementById('salesChart').getContext('2d');
+            const salesChart = new Chart(salesCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Product A', 'Product B', 'Product C', 'Product D'],
+                    datasets: [{
+                        data: [400, 300, 300, 200],
+                        backgroundColor: [
+                            '#0088FE',
+                            '#00C49F',
+                            '#FFBB28',
+                            '#FF8042'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // Refresh button functionality
+            document.getElementById('refresh-btn').addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                icon.classList.add('fa-spin');
+                
+                setTimeout(() => {
+                    icon.classList.remove('fa-spin');
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+    
+              
