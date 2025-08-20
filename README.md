@@ -8,6 +8,9 @@
 ![](https://img.shields.io/badge/Topic-Github-lighred)
 ![](https://img.shields.io/website?url=https%3A%2F%2Fgithub.com%2Fmscbuild)
 
+<img width="1400" height="520" alt="image" src="https://github.com/user-attachments/assets/9a2a88e8-ab84-47e3-b001-e72f4ab14e28" />
+
+
 >Dive into the world of insights with our collection of projects! Uncover patterns, trends, and make data-driven decisions
 
 >A collection of data analysis and visualization projects designed to uncover insights from diverse datasets. This collection of data analysis projects demonstrates techniques for extracting, transforming, analyzing, and visualizing data.
