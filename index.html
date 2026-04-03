@@ -14,7 +14,6 @@
 :root {
   --header-height: 3.5rem;
   /*========== Colors ==========*/
-  /*Color mode HSL(hue, saturation, lightness)*/
   --first-color: hsl(14, 98%, 50%);
   --black-color: hsl(0, 0%, 0%);
   --black-color-light: hsl(0, 0%, 40%);
@@ -25,7 +24,6 @@
   --body-color: hsl(0, 0%, 87%);
   --container-color: hsl(0, 0%, 83%);
   /*========== Font and typography ==========*/
-  /*.5rem = 8px | 1rem = 16px ...*/
   --body-font: "Bai Jamjuree", sans-serif;
   --biggest-font-size: 2.5rem;
   --h1-font-size: 1.75rem;
@@ -42,6 +40,7 @@
   /*========== z index ==========*/
   --z-tooltip: 10;
   --z-fixed: 100;
+  --z-modal: 200;
 }
 /*========== Responsive typography ==========*/
 @media screen and (min-width: 1150px) {
@@ -61,30 +60,7 @@
   padding: 0;
   margin: 0;
 }
-  .nav__logo {
-    display: flex;
-    column-gap: .5rem;
-    align-items: center;
-    font-weight
-    color: #000;
-}
-  .nav__logo-circle {
-    border-radius: 50%;
-}
-  .nav__logo-circle, .nav__toggle {
-    width: 32px;
-    height: 32px;
-    background-color: #000;
-    color: #f2f2f2;
-    display: grid;
-    place-items: center;
-}
 
-* {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-}  
 html {
   scroll-behavior: smooth;
 }
@@ -93,12 +69,9 @@ body {
   font-size: var(--normal-font-size);
   background-color: var(--body-color);
   color: var(--text-color);
-  transition: background-color .4s; /* Pour le Dark theme */
+  transition: background-color .4s;
 }
-h1,
-h2,
-h3,
-h4 {
+h1, h2, h3, h4 {
   color: var(--title-color);
   font-weight: var(--font-bold);
 }
@@ -113,18 +86,7 @@ img {
   max-width: 100%;
   height: auto;
 }
-/*=============== THEME ===============*/
-.nav__buttons {
-  display: flex;
-  align-items: center;
-  column-gap: 1rem;
-}
-.change-theme {
-  font-size: 1.25rem;
-  color: var(--title-color);
-  cursor: pointer;
-  transition: color .3s;
-}
+
 /*=============== REUSABLE CSS CLASSES ===============*/
 .container {
   max-width: 1120px;
@@ -163,39 +125,24 @@ img {
   top: initial;
   bottom: -4px;
 }
-.geometric-box {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background-color: var(--first-color);
-  rotate: -30deg;
-}
-.geometric-box::after {
-  content: "";
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  border: 3px solid var(--black-color);
-  left: -5px;
-  top: -5px;
-}
 .main {
-  overflow: hidden; /* For animation ScrollReveal */
+  overflow: hidden;
 }
+
 /*=============== BUTTON ===============*/
 .button {
   display: flex;
   align-items: center;
   justify-content: center;
   column-gap: 0.5rem;
-}
-.button {
   background-color: var(--black-color);
   padding: 1.1rem 1.5rem;
   color: var(--white-color);
   font-weight: var(--font-medium);
   border-radius: 0.75rem;
   transition: background-color 0.4s;
+  border: none;
+  cursor: pointer;
 }
 .button i {
   font-size: 1.25rem;
@@ -203,6 +150,7 @@ img {
 .button:hover {
   background-color: var(--first-color);
 }
+
 /*=============== PROJECTS ===============*/
 .projects {
   background-color: var(--container-color);
@@ -294,41 +242,49 @@ img {
   background-color: var(--container-color);
   transition: 0.4s;
 }
-
 .nav {
   height: var(--header-height);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
 .nav__logo {
-  color: var(--title-color);
+  display: flex;
+  column-gap: .5rem;
+  align-items: center;
   font-weight: var(--font-bold);
+  color: var(--title-color);
   font-size: 1.5rem;
 }
-
+.nav__logo-circle {
+  width: 32px;
+  height: 32px;
+  background-color: var(--black-color);
+  color: var(--white-color);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1rem;
+  font-weight: var(--font-bold);
+}
 .nav__menu {
   display: flex;
   align-items: center;
 }
-
 .nav__list {
   display: flex;
   column-gap: 2rem;
 }
-
 .nav__link {
   color: var(--text-color);
   font-size: var(--small-font-size);
   font-weight: var(--font-medium);
   transition: color 0.4s;
+  cursor: pointer;
 }
-
 .nav__link:hover {
   color: var(--first-color);
 }
-
 .nav__toggle {
   display: none;
   font-size: 1.5rem;
@@ -349,28 +305,24 @@ img {
   transition: 0.4s;
   z-index: var(--z-fixed);
 }
-
 .nav__menu--mobile.active {
   right: 0;
 }
-
 .nav__list--mobile {
   display: flex;
   flex-direction: column;
   row-gap: 2rem;
 }
-
 .nav__link--mobile {
   color: var(--text-color);
   font-size: var(--h2-font-size);
   font-weight: var(--font-medium);
   transition: color 0.4s;
+  cursor: pointer;
 }
-
 .nav__link--mobile:hover {
   color: var(--first-color);
 }
-
 .nav__close {
   position: absolute;
   top: 1rem;
@@ -380,113 +332,386 @@ img {
   cursor: pointer;
 }
 
-/*=============== MEDIA QUERIES ===============*/
-/* For small devices */
-@media screen and (max-width: 340px) {
-  .container {
-    margin-inline: 1rem;
-  }
+/*=============== MODAL BASE ===============*/
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s, visibility 0.4s;
+  backdrop-filter: blur(4px);
+  padding: 1.5rem;
+}
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+.modal-container {
+  position: relative;
+  background-color: var(--container-color);
+  border-radius: 1.25rem;
+  width: 100%;
+  max-width: 720px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 12px 40px;
+  transform: translateY(30px) scale(0.95);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  padding: 2.5rem 2rem;
+}
+.modal-overlay.active .modal-container {
+  transform: translateY(0) scale(1);
+}
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+  font-size: 1.25rem;
+  color: var(--title-color);
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  background-color: var(--black-color);
+  color: var(--white-color);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  transition: background-color 0.4s, transform 0.3s;
+  border: none;
+}
+.modal-close:hover {
+  background-color: var(--first-color);
+  transform: rotate(90deg);
+}
+.modal-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.modal-title {
+  position: relative;
+  display: inline-block;
+  font-size: var(--h1-font-size);
+  margin-bottom: 0.5rem;
+}
+.modal-title::after {
+  content: "";
+  width: 50px;
+  height: 32px;
+  background-color: hsla(14, 98%, 50%, 0.2);
+  position: absolute;
+  top: -4px;
+  right: -12px;
+  border-radius: 0.25rem;
+  transform: rotate(-30deg);
+}
+.modal-subtitle {
+  font-size: var(--normal-font-size);
+  color: var(--text-color-light);
+  font-weight: var(--font-medium);
 }
 
-/* For medium devices */
+/*=============== CONTACT MODAL ===============*/
+.contact-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.contact-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.contact-info-item {
+  background-color: var(--white-color);
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  column-gap: 0.75rem;
+  transition: background-color 0.4s, transform 0.3s;
+}
+.contact-info-item:hover {
+  transform: translateY(-3px);
+  box-shadow: rgba(0,0,0,0.05) 0 5px 15px;
+}
+.contact-info-icon {
+  width: 40px;
+  height: 40px;
+  background-color: hsla(14, 98%, 50%, 0.1);
+  color: var(--first-color);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+.contact-info-text {
+  display: flex;
+  flex-direction: column;
+}
+.contact-info-label {
+  font-size: var(--smaller-font-size);
+  color: var(--text-color-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.contact-info-value {
+  font-size: var(--normal-font-size);
+  color: var(--title-color);
+  font-weight: var(--font-semi-bold);
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.form-label {
+  font-size: var(--small-font-size);
+  color: var(--title-color);
+  font-weight: var(--font-medium);
+  margin-left: 0.25rem;
+}
+.form-input, .form-textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 2px solid var(--black-color-light);
+  background-color: var(--white-color);
+  color: var(--title-color);
+  border-radius: 0.75rem;
+  font-family: var(--body-font);
+  font-size: var(--normal-font-size);
+  transition: border-color 0.3s, box-shadow 0.3s;
+  outline: none;
+}
+.form-input::placeholder, .form-textarea::placeholder {
+  color: var(--text-color-light);
+}
+.form-input:focus, .form-textarea:focus {
+  border-color: var(--first-color);
+  box-shadow: 0 0 0 4px hsla(14, 98%, 50%, 0.15);
+}
+.form-textarea {
+  resize: vertical;
+  min-height: 130px;
+}
+.form-button {
+  margin-top: 0.25rem;
+  width: 100%;
+}
+
+.contact-success {
+  display: none;
+  text-align: center;
+  padding: 1rem 0;
+  animation: fadeIn 0.4s ease;
+}
+.contact-success.active { display: block; }
+.contact-success__icon {
+  width: 64px; height: 64px;
+  background-color: hsla(14, 98%, 50%, 0.15);
+  color: var(--first-color);
+  border-radius: 50%;
+  display: grid; place-items: center;
+  margin: 0 auto 1rem;
+  font-size: 1.75rem;
+}
+.contact-success__title { font-size: var(--h3-font-size); margin-bottom: 0.5rem; }
+.contact-success__text { color: var(--text-color); font-size: var(--normal-font-size); margin-bottom: 1.5rem; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/*=============== ABOUT MODAL (Shared Base) ===============*/
+.about-modal__avatar {
+  width: 90px;
+  height: 90px;
+  background-color: var(--black-color);
+  color: var(--white-color);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 2.25rem;
+  font-weight: var(--font-bold);
+  margin: 0 auto 1.5rem;
+  position: relative;
+}
+.about-modal__avatar::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 3px solid var(--first-color);
+  border-radius: 50%;
+  top: -6px;
+  left: 6px;
+  transform: rotate(-15deg);
+}
+.about-modal__text {
+  font-size: var(--normal-font-size);
+  line-height: 1.7;
+  color: var(--text-color);
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.about-modal__text strong {
+  color: var(--title-color);
+}
+.about-modal__skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+.about-modal__skill-tag {
+  background-color: var(--black-color);
+  color: var(--white-color);
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: var(--small-font-size);
+  font-weight: var(--font-medium);
+  transition: background-color 0.4s, transform 0.3s;
+}
+.about-modal__skill-tag:hover {
+  background-color: var(--first-color);
+  transform: translateY(-2px);
+}
+.about-modal__info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.about-modal__info-item {
+  background-color: var(--white-color);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  transition: background-color 0.4s;
+}
+.about-modal__info-item:hover {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+.about-modal__info-label {
+  font-size: var(--smaller-font-size);
+  color: var(--text-color-light);
+  font-weight: var(--font-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+.about-modal__info-value {
+  font-size: var(--normal-font-size);
+  color: var(--title-color);
+  font-weight: var(--font-semi-bold);
+}
+.about-modal__cta {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.about-modal__cta .button {
+  padding: 0.85rem 1.5rem;
+  font-size: var(--small-font-size);
+}
+.about-modal__cta .button--outline {
+  background-color: transparent;
+  border: 2px solid var(--black-color);
+  color: var(--title-color);
+}
+.about-modal__cta .button--outline:hover {
+  background-color: var(--black-color);
+  color: var(--white-color);
+}
+
+/*=============== MEDIA QUERIES ===============*/
+@media screen and (max-width: 340px) {
+  .container { margin-inline: 1rem; }
+  .modal-container { padding: 2rem 1.25rem; }
+  .contact-info-grid { grid-template-columns: 1fr; }
+  .about-modal__info-grid { grid-template-columns: 1fr; }
+}
+
 @media screen and (min-width: 576px) {
-  .projects__container {
-    grid-template-columns: 350px;
-    justify-content: center;
-  }
+  .projects__container { grid-template-columns: 350px; justify-content: center; }
 }
 
 @media screen and (min-width: 768px) {
-  .projects__container {
-    grid-template-columns: repeat(2, 350px);
-  }
+  .projects__container { grid-template-columns: repeat(2, 350px); }
 }
 
-/* Mobile menu breakpoint */
 @media screen and (max-width: 767px) {
-  .nav__toggle {
-    display: block;
-  }
-  
-  .nav__menu {
-    display: none;
-  }
+  .nav__toggle { display: block; }
+  .nav__menu { display: none; }
+  .about-modal__cta { flex-direction: column; align-items: center; }
 }
 
-/* For large devices */
 @media screen and (min-width: 1150px) {
-  .container {
-    margin-inline: auto;
-  }
-  .section {
-    padding-block: 7rem 2rem;
-  }
-  .section__title-1::after,
-  .section__title-2::after {
-    width: 70px;
-    height: 48px;
-  }
-  .projects__container {
-    grid-template-columns: repeat(3, 352px);
-    padding-block: 3rem 1rem;
-  }
-  .projects__card {
-    padding: 1.25rem 1.25rem 2.5rem;
-  }
-  .projects__image {
-    margin-bottom: 1rem;
-  }
-  .projects__content {
-    margin-bottom: 2rem;
-  }
-  .projects__buttons {
-    right: 1.25rem;
-  }
+  .container { margin-inline: auto; }
+  .section { padding-block: 7rem 2rem; }
+  .section__title-1::after, .section__title-2::after { width: 70px; height: 48px; }
+  .projects__container { grid-template-columns: repeat(3, 352px); padding-block: 3rem 1rem; }
+  .projects__card { padding: 1.25rem 1.25rem 2.5rem; }
+  .projects__image { margin-bottom: 1rem; }
+  .projects__content { margin-bottom: 2rem; }
+  .projects__buttons { right: 1.25rem; }
 }
-   /*=============== FOOTER ===============*/
-    .footer {
-      background-color: var(--black-color);
-      color: var(--white-color);
-      padding: 2rem 0;
-    }
-    
-    .footer__container {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-      text-align: center;
-    }
-    
-    .footer__social {
-      margin-bottom: 1rem;
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-    }
-    
-    .social__link {
-      color: var(--white-color);
-      font-size: 1.5rem;
-      transition: color 0.4s;
-    }
-    
-    .social__link:hover {
-      color: var(--first-color);
-    }
-    
-    .footer__title {
-      font-size: 1.25rem;
-      margin-bottom: 1rem;
-    }
-    
-    .footer__copy {
-      font-size: var(--small-font-size);
-      opacity: 0.8;
-    }
+
+/*=============== FOOTER ===============*/
+.footer {
+  background-color: var(--black-color);
+  color: var(--white-color);
+  padding: 2rem 0;
+}
+.footer__container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  text-align: center;
+}
+.footer__social {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+.social__link {
+  color: var(--white-color);
+  font-size: 1.5rem;
+  transition: color 0.4s;
+}
+.social__link:hover {
+  color: var(--first-color);
+}
+.footer__title {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+.footer__copy {
+  font-size: var(--small-font-size);
+  opacity: 0.8;
+}
+
+/* Scrollbar for modal */
+.modal-container::-webkit-scrollbar { width: 6px; }
+.modal-container::-webkit-scrollbar-track { background: transparent; }
+.modal-container::-webkit-scrollbar-thumb { background-color: var(--black-color-light); border-radius: 3px; }
 </style>
-  <script>
-  window.console = window.console || function(t) {};
-</script>
 </head>
 <body translate="no">
   <!--=============== REMIXICONS ===============-->
@@ -507,9 +732,9 @@ img {
     <div class="nav__menu" id="nav-menu">
       <ul class="nav__list">
         <li><a href="#" class="nav__link">Home</a></li>
-        <li><a href="https://mscbuild.github.io/mscbuild/" class="nav__link">About</a></li>
+        <li><a href="#" class="nav__link about-trigger">About</a></li>
         <li><a href="#projects" class="nav__link">Projects</a></li>
-        <li><a href="https://www.linkedin.com/in/jurijsrck" class="nav__link">Contact</a></li>
+        <li><a href="#" class="nav__link contact-trigger">Contact</a></li>
       </ul>
     </div>
   </nav>
@@ -520,10 +745,133 @@ img {
   <i class="ri-close-line nav__close" id="nav-close"></i>
   <ul class="nav__list--mobile">
     <li><a href="#" class="nav__link--mobile">Home</a></li>
-    <li><a href="https://mscbuild.github.io/mscbuild/" class="nav__link">About</a></li>
+    <li><a href="#" class="nav__link--mobile about-trigger-mobile">About</a></li>
     <li><a href="#projects" class="nav__link--mobile">Projects</a></li>
-    <li><a href="https://www.linkedin.com/in/jurijsrckt" class="nav__link--mobile">Contact</a></li>
+    <li><a href="#" class="nav__link--mobile contact-trigger-mobile">Contact</a></li>
   </ul>
+</div>
+
+<!--==================== ABOUT MODAL ====================-->
+<div class="modal-overlay" id="about-modal">
+  <div class="modal-container">
+    <button class="modal-close" id="about-close" aria-label="Close">
+      <i class="ri-close-line"></i>
+    </button>
+
+    <div class="modal-header">
+      <div class="about-modal__avatar">Y</div>
+      <h2 class="modal-title"><span>About Me</span></h2>
+      <p class="modal-subtitle">Developer • Analyst • Designer</p>
+    </div>
+
+    <div class="contact-body">
+      <p class="about-modal__text">
+        Hello! I'm <strong>Yuri</strong>, a passionate developer and data analyst with a keen eye for design. 
+        I specialize in building data-driven solutions, creating insightful visualizations, and developing 
+        applications that solve real-world problems. With expertise spanning <strong>Python, Machine Learning, 
+        NLP,</strong> and <strong>data visualization</strong>, I transform complex datasets into actionable insights.
+      </p>
+
+      <div class="about-modal__skills">
+        <span class="about-modal__skill-tag">Python</span>
+        <span class="about-modal__skill-tag">Machine Learning</span>
+        <span class="about-modal__skill-tag">NLP</span>
+        <span class="about-modal__skill-tag">Data Analysis</span>
+        <span class="about-modal__skill-tag">Tableau</span>
+        <span class="about-modal__skill-tag">Android</span>
+        <span class="about-modal__skill-tag">Branding</span>
+        <span class="about-modal__skill-tag">Cybersecurity</span>
+        <span class="about-modal__skill-tag">EDA</span>
+        <span class="about-modal__skill-tag">Forecasting</span>
+      </div>
+
+      <div class="about-modal__info-grid">
+        <div class="about-modal__info-item">
+          <p class="about-modal__info-label">Location</p>
+          <p class="about-modal__info-value">Latvia</p>
+        </div>
+        <div class="about-modal__info-item">
+          <p class="about-modal__info-label">Experience</p>
+          <p class="about-modal__info-value">2020 – Present</p>
+        </div>
+        <div class="about-modal__info-item">
+          <p class="about-modal__info-label">Focus</p>
+          <p class="about-modal__info-value">Data & AI</p>
+        </div>
+        <div class="about-modal__info-item">
+          <p class="about-modal__info-label">Projects</p>
+          <p class="about-modal__info-value">18+ Completed</p>
+        </div>
+      </div>
+
+      <div class="about-modal__cta">
+        <a href="https://www.linkedin.com/in/jurijsrck" target="_blank" class="button">
+          <i class="ri-linkedin-box-fill"></i> LinkedIn
+        </a>
+        <a href="https://github.com/mscbuild" target="_blank" class="button button--outline">
+          <i class="ri-github-fill"></i> GitHub
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--==================== CONTACT MODAL ====================-->
+<div class="modal-overlay" id="contact-modal">
+  <div class="modal-container">
+    <button class="modal-close" id="contact-close" aria-label="Close">
+      <i class="ri-close-line"></i>
+    </button>
+
+    <div class="modal-header">
+      <h2 class="modal-title"><span>Contact Me</span></h2>
+      <p class="modal-subtitle">Have a project or question? Let's talk.</p>
+    </div>
+
+    <div class="contact-body">
+      <div class="contact-info-grid">
+        <div class="contact-info-item">
+          <span class="contact-info-icon"><i class="ri-mail-send-line"></i></span>
+          <div class="contact-info-text">
+            <span class="contact-info-label">Email</span>
+            <span class="contact-info-value">yuri@dev.com</span>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <span class="contact-info-icon"><i class="ri-map-pin-line"></i></span>
+          <div class="contact-info-text">
+            <span class="contact-info-label">Location</span>
+            <span class="contact-info-value">Latvia</span>
+          </div>
+        </div>
+      </div>
+
+      <form class="contact-form" id="contact-form">
+        <div class="form-group">
+          <label for="contact-name" class="form-label">Full Name</label>
+          <input type="text" id="contact-name" class="form-input" placeholder="John Doe" required>
+        </div>
+        <div class="form-group">
+          <label for="contact-email" class="form-label">Email Address</label>
+          <input type="email" id="contact-email" class="form-input" placeholder="john@example.com" required>
+        </div>
+        <div class="form-group">
+          <label for="contact-message" class="form-label">Message</label>
+          <textarea id="contact-message" class="form-textarea" placeholder="Tell me about your project or question..." required></textarea>
+        </div>
+        <button type="submit" class="button form-button" id="contact-submit">
+          <span class="form-btn-text"><i class="ri-send-plane-fill"></i> Send Message</span>
+        </button>
+      </form>
+
+      <div class="contact-success" id="contact-success">
+        <div class="contact-success__icon"><i class="ri-checkbox-circle-line"></i></div>
+        <h3 class="contact-success__title">Message Sent!</h3>
+        <p class="contact-success__text">Thank you for reaching out. I'll get back to you as soon as possible.</p>
+        <button class="button" id="contact-reset-btn">Send Another Message</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!--==================== PROJECTS ====================-->
@@ -915,7 +1263,7 @@ img {
         </p>
       </div>
       <div class="projects__buttons">
-        <a href="https://files.inbox.lv/shared/file/2d6c0eb46200e0afed9a0e8bd383199e0bdfa591"" target="_blank" class="projects__link">
+        <a href="https://files.inbox.lv/shared/file/2d6c0eb46200e0afed9a0e8bd383199e0bdfa591" target="_blank" class="projects__link">
           <i class="ri-github-line"></i> Source Code
         </a>
         <a href="https://files.inbox.lv/shared/file/2d6c0eb46200e0afed9a0e8bd383199e0bdfa591" target="_blank" class="projects__link">
@@ -965,30 +1313,89 @@ img {
 
 <script>
 // Mobile menu toggle
-const navMenu = document.getElementById('nav-menu-mobile');
+const navMenuMobile = document.getElementById('nav-menu-mobile');
 const navToggle = document.getElementById('nav-toggle');
-const navClose = document.getElementById('nav-close');
+const navCloseBtn = document.getElementById('nav-close');
 
-// Show mobile menu
 if(navToggle) {
-  navToggle.addEventListener('click', () => {
-    navMenu.classList.add('active');
-  });
+  navToggle.addEventListener('click', () => navMenuMobile.classList.add('active'));
 }
-
-// Hide mobile menu
-if(navClose) {
-  navClose.addEventListener('click', () => {
-    navMenu.classList.remove('active');
-  });
+if(navCloseBtn) {
+  navCloseBtn.addEventListener('click', () => navMenuMobile.classList.remove('active'));
 }
-
-// Close menu when clicking on a nav link
 document.querySelectorAll('.nav__link--mobile').forEach(link => {
-  link.addEventListener('click', () => {
-    navMenu.classList.remove('active');
-  });
+  link.addEventListener('click', () => navMenuMobile.classList.remove('active'));
+});
+
+// Modal Logic Helper
+function initModal(modalId, triggerSelector, mobileTriggerSelector) {
+  const overlay = document.getElementById(modalId);
+  const triggers = document.querySelectorAll(triggerSelector);
+  const mobileTriggers = document.querySelectorAll(mobileTriggerSelector);
+  const closeBtn = overlay.querySelector('.modal-close');
+
+  const open = (e) => {
+    e.preventDefault();
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    navMenuMobile.classList.remove('active');
+  };
+
+  const close = () => {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  };
+
+  triggers.forEach(t => t.addEventListener('click', open));
+  mobileTriggers.forEach(t => t.addEventListener('click', open));
+  if(closeBtn) closeBtn.addEventListener('click', close);
+  overlay.addEventListener('click', (e) => { if(e.target === overlay) close(); });
+}
+
+// Initialize Modals
+initModal('about-modal', '.about-trigger', '.about-trigger-mobile');
+initModal('contact-modal', '.contact-trigger', '.contact-trigger-mobile');
+
+// ESC Key to close any open modal
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+  }
+});
+
+// Contact Form Logic
+const contactForm = document.getElementById('contact-form');
+const contactSuccess = document.getElementById('contact-success');
+const contactResetBtn = document.getElementById('contact-reset-btn');
+
+contactForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const submitBtn = document.getElementById('contact-submit');
+  const btnText = submitBtn.querySelector('.form-btn-text');
+  
+  // Simulate loading
+  btnText.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Sending...';
+  submitBtn.disabled = true;
+
+  setTimeout(() => {
+    contactForm.style.display = 'none';
+    document.querySelector('.contact-info-grid').style.display = 'none';
+    contactSuccess.classList.add('active');
+    btnText.innerHTML = '<i class="ri-send-plane-fill"></i> Send Message';
+    submitBtn.disabled = false;
+    contactForm.reset();
+  }, 1200);
+});
+
+contactResetBtn.addEventListener('click', () => {
+  contactSuccess.classList.remove('active');
+  contactForm.style.display = 'flex';
+  document.querySelector('.contact-info-grid').style.display = 'grid';
 });
 </script>
 </body>
 </html>
+
