@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.1.1/400.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.1.1/500.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.1.1/600.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.1.1/700.css" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-width: 260px;
+            --sidebar-collapsed: 70px;
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --success-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --info-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            --card-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+            --card-hover-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+            --transition-speed: 0.3s;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; overflow-x: hidden; transition: background-color var(--transition-speed); }
+
+        .sidebar {
+            position: fixed; top: 0; left: 0; width: var(--sidebar-width); height: 100vh;
+            background: var(--primary-gradient); z-index: 1000; transition: all var(--transition-speed) ease;
+            overflow-y: auto; overflow-x: hidden;
+        }
+        .sidebar.collapsed { width: var(--sidebar-collapsed); }
+        .sidebar-brand { padding: 1.25rem 1rem; display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-brand-icon { width: 34px; height: 34px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+        .sidebar-brand-text { font-size: 1.05rem; font-weight: 700; color: white; white-space: nowrap; transition: opacity var(--transition-speed); }
+        .sidebar.collapsed .sidebar-brand-text, .sidebar.collapsed .nav-text, .sidebar.collapsed .nav-section-title, .sidebar.collapsed .user-info { opacity: 0; pointer-events: none; width: 0; overflow: hidden; }
+        .sidebar-nav { padding: 0.75rem 0; }
+        .nav-section-title { padding: 0.5rem 1.25rem; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); white-space: nowrap; transition: opacity var(--transition-speed); }
+        .sidebar .nav-link { padding: 0.6rem 1.25rem; color: rgba(255,255,255,0.7); display: flex; align-items: center; gap: 0.75rem; transition: all 0.2s; white-space: nowrap; }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { background: rgba(255,255,255,0.15); color: white; }
+        .sidebar .nav-link.active { border-left: 3px solid white; }
+        .sidebar .nav-link i { font-size: 1rem; width: 18px; text-align: center; flex-shrink: 0; }
+        .sidebar-user { padding: 1rem 1.25rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 0.75rem; position: sticky; bottom: 0; background: rgba(0,0,0,0.1); }
+        .sidebar-user img { width: 32px; height: 32px; border-radius: 50%; }
+        .user-info { transition: opacity var(--transition-speed); }
+        .user-info .name { color: white; font-size: 0.8rem; font-weight: 600; }
+        .user-info .role { color: rgba(255,255,255,0.6); font-size: 0.65rem; }
+
+        .main-content { margin-left: var(--sidebar-width); transition: margin-left var(--transition-speed) ease; min-height: 100vh; }
+        .main-content.expanded { margin-left: var(--sidebar-collapsed); }
+        .top-navbar { background: var(--bs-body-bg); border-bottom: 1px solid var(--bs-border-color); padding: 0.6rem 1.25rem; position: sticky; top: 0; z-index: 999; transition: background-color var(--transition-speed); }
+
+        /* KPI Cards - Compact */
+        .stat-card {
+            border: none; border-radius: 10px; box-shadow: var(--card-shadow);
+            transition: all 0.3s ease; overflow: hidden;
+        }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: var(--card-hover-shadow); }
+        .stat-card .card-body { padding: 1rem !important; }
+        .stat-card .kpi-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
+        .stat-card .kpi-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--bs-secondary-color); font-weight: 500; margin: 0; }
+        .stat-card .kpi-value { font-size: 1.5rem; font-weight: 700; line-height: 1.2; margin: 0; }
+        .stat-card .icon-wrapper { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+        .stat-card .kpi-trend { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; margin-top: 0.25rem; }
+        .stat-card .trend-up { color: #198754; }
+        .stat-card .trend-down { color: #dc3545; }
+        .stat-card .trend-text { color: var(--bs-secondary-color); font-size: 0.65rem; }
+        .stat-card .sparkline-wrap { height: 32px; margin-top: 0.35rem; }
+
+        .chart-card { border: none; border-radius: 10px; box-shadow: var(--card-shadow); }
+        .chart-card:hover { box-shadow: var(--card-hover-shadow); }
+        .chart-container { position: relative; width: 100%; }
+        .table-card { border: none; border-radius: 10px; box-shadow: var(--card-shadow); }
+        .table-card .table th { font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom-width: 2px; cursor: pointer; user-select: none; }
+        .table-card .table th:hover { background-color: var(--bs-tertiary-bg); }
+        .table-card .table th i { margin-left: 3px; font-size: 0.65rem; }
+        .activity-item { padding: 0.75rem 0; border-bottom: 1px solid var(--bs-border-color); transition: background-color 0.2s; }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-item:hover { background-color: var(--bs-tertiary-bg); }
+        .activity-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
+        .progress-thin { height: 5px; border-radius: 3px; }
+        .custom-badge { font-size: 0.65rem; padding: 0.25em 0.55em; border-radius: 5px; font-weight: 600; }
+        .live-dot { width: 7px; height: 7px; background: #198754; border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.4); } 70% { box-shadow: 0 0 0 8px rgba(25, 135, 84, 0); } 100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: fadeInUp 0.4s ease forwards; }
+        .animate-in:nth-child(1) { animation-delay: 0.05s; } .animate-in:nth-child(2) { animation-delay: 0.1s; } .animate-in:nth-child(3) { animation-delay: 0.15s; } .animate-in:nth-child(4) { animation-delay: 0.2s; }
+        .sidebar-toggle { border: none; background: transparent; font-size: 1.2rem; padding: 0.2rem; cursor: pointer; color: var(--bs-body-color); }
+        .search-box { position: relative; max-width: 280px; }
+        .search-box input { padding-left: 2.25rem; border-radius: 8px; border: 1px solid var(--bs-border-color); font-size: 0.85rem; }
+        .search-box i { position: absolute; left: 0.7rem; top: 50%; transform: translateY(-50%); color: var(--bs-secondary-color); }
+
+        .notification-badge { position: absolute; top: -2px; right: -2px; width: 16px; height: 16px; background: #dc3545; border-radius: 50%; font-size: 0.55rem; display: flex; align-items: center; justify-content: center; color: white; border: 2px solid var(--bs-body-bg); }
+        .dark-toggle { border: none; background: transparent; font-size: 1rem; cursor: pointer; padding: 0.2rem 0.4rem; border-radius: 6px; transition: background-color 0.2s; }
+        .dark-toggle:hover { background-color: var(--bs-secondary-bg); }
+        .filter-btn { border: 1px solid var(--bs-border-color); background: var(--bs-body-bg); border-radius: 6px; padding: 0.35rem 0.75rem; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
+        .filter-btn:hover, .filter-btn.active { background: #667eea; color: white; border-color: #667eea; }
+        .pagination-custom .page-link { border-radius: 6px !important; margin: 0 2px; border: none; padding: 0.35rem 0.6rem; font-size: 0.8rem; }
+        .pagination-custom .page-item.active .page-link { background: #667eea; color: white; }
+        .world-map-svg { width: 100%; height: auto; }
+        .map-region { fill: #e9ecef; stroke: #dee2e6; stroke-width: 0.5; transition: all 0.2s; cursor: pointer; }
+        .map-region:hover { fill: #667eea; opacity: 0.7; }
+        .map-region.active { fill: #667eea; }
+        [data-bs-theme="dark"] .map-region { fill: #495057; stroke: #6c757d; }
+        [data-bs-theme="dark"] .map-region:hover { fill: #667eea; }
+        .scrollbar-custom::-webkit-scrollbar { width: 4px; } .scrollbar-custom::-webkit-scrollbar-track { background: transparent; } .scrollbar-custom::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+        .scrollbar-light::-webkit-scrollbar { width: 5px; } .scrollbar-light::-webkit-scrollbar-thumb { background: var(--bs-border-color); border-radius: 3px; }
+        .sidebar::-webkit-scrollbar { width: 4px; } .sidebar::-webkit-scrollbar-track { background: transparent; } .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 2px; }
+        .region-item { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0; }
+        .flag-emoji { font-size: 1.1rem; margin-right: 0.4rem; }
+        .heatmap-cell { width: 12px; height: 12px; border-radius: 2px; display: inline-block; margin: 1px; transition: all 0.15s; cursor: pointer; }
+        .heatmap-cell:hover { transform: scale(1.2); }
+        .heatmap-cell.level-0 { background-color: var(--bs-border-color); }
+        .heatmap-cell.level-1 { background-color: #c6e48b; } .heatmap-cell.level-2 { background-color: #7bc96f; } .heatmap-cell.level-3 { background-color: #239a3b; } .heatmap-cell.level-4 { background-color: #196127; }
+        [data-bs-theme="dark"] .heatmap-cell.level-1 { background-color: #0e4429; } [data-bs-theme="dark"] .heatmap-cell.level-2 { background-color: #006d32; } [data-bs-theme="dark"] .heatmap-cell.level-3 { background-color: #26a641; } [data-bs-theme="dark"] .heatmap-cell.level-4 { background-color: #39d353; }
+        .heatmap-grid { display: flex; gap: 2px; } .heatmap-week { display: flex; flex-direction: column; }
+        .kanban-column { min-height: 300px; background: var(--bs-tertiary-bg); border-radius: 10px; padding: 0.75rem; }
+        .task-card { background: var(--bs-body-bg); border-radius: 8px; padding: 0.75rem; margin-bottom: 0.6rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: grab; transition: all 0.2s; }
+        .task-card:hover { box-shadow: 0 3px 6px rgba(0,0,0,0.12); transform: translateY(-1px); }
+        .task-card.dragging { opacity: 0.4; transform: rotate(1deg); }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999; }
+        .sidebar-overlay.show { display: block; }
+        @media (max-width: 991.98px) { .sidebar { transform: translateX(-100%); } .sidebar.show-mobile { transform: translateX(0); } .main-content { margin-left: 0 !important; } }
+        @media (max-width: 767.98px) { .stat-card { margin-bottom: 0.75rem; } }
+    </style>
+</head>
+<body>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <nav class="sidebar scrollbar-custom" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-icon"><i class="bi bi-bar-chart-line-fill"></i></div>
+            <span class="sidebar-brand-text">AnalytiX</span>
+        </div>
+        <div class="sidebar-nav">
+            <div class="nav-section-title">Main</div>
+            <a href="#" class="nav-link active" data-section="dashboard" onclick="switchSection('dashboard', this)"><i class="bi bi-grid-1x2-fill"></i><span class="nav-text">Dashboard</span></a>
+            <a href="#" class="nav-link" data-section="analytics" onclick="switchSection('analytics', this)"><i class="bi bi-graph-up-arrow"></i><span class="nav-text">Analytics</span></a>
+            <a href="#" class="nav-link" data-section="reports" onclick="switchSection('reports', this)"><i class="bi bi-file-earmark-bar-graph"></i><span class="nav-text">Reports</span></a>
+            <div class="nav-section-title mt-3">Management</div>
+            <a href="#" class="nav-link" data-section="users" onclick="switchSection('users', this)"><i class="bi bi-people"></i><span class="nav-text">Users</span><span class="badge bg-light text-dark ms-auto nav-text">24</span></a>
+            <a href="#" class="nav-link" data-section="projects" onclick="switchSection('projects', this)"><i class="bi bi-folder"></i><span class="nav-text">Projects</span></a>
+            <div class="nav-section-title mt-3">Settings</div>
+            <a href="#" class="nav-link" onclick="showModal('settingsModal')"><i class="bi bi-gear"></i><span class="nav-text">Settings</span></a>
+            <a href="#" class="nav-link" onclick="showModal('helpModal')"><i class="bi bi-question-circle"></i><span class="nav-text">Help</span></a>
+        </div>
+        <div class="sidebar-user">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%23667eea'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-size='11' font-weight='bold'%3EJD%3C/text%3E%3C/svg%3E" alt="User">
+            <div class="user-info"><div class="name">John Doe</div><div class="role">Admin</div></div>
+        </div>
+    </nav>
+
+    <div class="main-content" id="mainContent">
+        <header class="top-navbar d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+                <button class="sidebar-toggle" onclick="toggleSidebar()"><i class="bi bi-list"></i></button>
+                <div class="search-box d-none d-md-block"><i class="bi bi-search"></i><input type="text" class="form-control form-control-sm" placeholder="Search..."></div>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <button class="dark-toggle" onclick="toggleDarkMode()" title="Toggle theme"><i class="bi bi-moon-stars" id="themeIcon"></i></button>
+                <div class="position-relative">
+                    <button class="dark-toggle position-relative" onclick="toggleNotifications()"><i class="bi bi-bell"></i><span class="notification-badge" id="notifCount">3</span></button>
+                    <div class="dropdown-menu dropdown-menu-end p-0 shadow" style="width: 300px; display:none;" id="notifDropdown">
+                        <div class="d-flex justify-content-between align-items-center p-2 border-bottom"><h6 class="mb-0 small fw-bold">Notifications</h6><a href="#" class="text-decoration-none" style="font-size: 0.7rem;" onclick="clearNotifications()">Mark all read</a></div>
+                        <div class="scrollbar-light" style="max-height: 250px; overflow-y: auto;">
+                            <div class="p-2 border-bottom bg-light-subtle"><div class="d-flex align-items-start gap-2"><div class="activity-icon bg-success bg-opacity-10 text-success" style="width: 28px; height: 28px;"><i class="bi bi-check-circle"></i></div><div><div style="font-size: 0.8rem; font-weight: 500;">New sale completed</div><div class="text-muted" style="font-size: 0.7rem;">Order #1234 — $249.00</div></div></div></div>
+                            <div class="p-2 border-bottom"><div class="d-flex align-items-start gap-2"><div class="activity-icon bg-primary bg-opacity-10 text-primary" style="width: 28px; height: 28px;"><i class="bi bi-person-plus"></i></div><div><div style="font-size: 0.8rem; font-weight: 500;">New user registered</div><div class="text-muted" style="font-size: 0.7rem;">sarah@example.com</div></div></div></div>
+                            <div class="p-2"><div class="d-flex align-items-start gap-2"><div class="activity-icon bg-warning bg-opacity-10 text-warning" style="width: 28px; height: 28px;"><i class="bi bi-exclamation-triangle"></i></div><div><div style="font-size: 0.8rem; font-weight: 500;">Server load high</div><div class="text-muted" style="font-size: 0.7rem;">CPU at 92%</div></div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-3">
+            <div id="section-dashboard" class="section-content">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 animate-in">
+                    <div><h5 class="fw-bold mb-0">Dashboard</h5><p class="text-muted mb-0" style="font-size: 0.85rem;">Overview of your metrics</p></div>
+                    <div class="d-flex gap-2 mt-2 mt-md-0">
+                        <button class="filter-btn active" onclick="setDateRange(this)">7D</button>
+                        <button class="filter-btn" onclick="setDateRange(this)">30D</button>
+                        <button class="filter-btn" onclick="setDateRange(this)">90D</button>
+                        <button class="filter-btn" onclick="exportData('csv')"><i class="bi bi-download me-1"></i>Export</button>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-6 col-xl-3 animate-in">
+                        <div class="card stat-card h-100">
+                            <div class="card-body">
+                                <div class="kpi-header">
+                                    <div>
+                                        <p class="kpi-label">Total Revenue</p>
+                                        <h4 class="kpi-value" id="kpiRevenue">$48,295</h4>
+                                    </div>
+                                    <div class="icon-wrapper" style="background: rgba(102,126,234,0.15); color: #667eea;"><i class="bi bi-currency-dollar"></i></div>
+                                </div>
+                                <div class="kpi-trend"><span class="trend-up"><i class="bi bi-arrow-up-right"></i>12.5%</span><span class="trend-text">vs last period</span></div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-xl-3 animate-in">
+                        <div class="card stat-card h-100">
+                            <div class="card-body">
+                                <div class="kpi-header">
+                                    <div>
+                                        <p class="kpi-label">Total Users</p>
+                                        <h4 class="kpi-value" id="kpiUsers">12,458</h4>
+                                    </div>
+                                    <div class="icon-wrapper" style="background: rgba(25,135,84,0.15); color: #198754;"><i class="bi bi-people"></i></div>
+                                </div>
+                                <div class="kpi-trend"><span class="trend-up"><i class="bi bi-arrow-up-right"></i>8.2%</span><span class="trend-text">vs last period</span></div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-xl-3 animate-in">
+                        <div class="card stat-card h-100">
+                            <div class="card-body">
+                                <div class="kpi-header">
+                                    <div>
+                                        <p class="kpi-label">Orders</p>
+                                        <h4 class="kpi-value" id="kpiOrders">3,842</h4>
+                                    </div>
+                                    <div class="icon-wrapper" style="background: rgba(220,53,69,0.15); color: #dc3545;"><i class="bi bi-bag"></i></div>
+                                </div>
+                                <div class="kpi-trend"><span class="trend-down"><i class="bi bi-arrow-down-right"></i>3.1%</span><span class="trend-text">vs last period</span></div>
+                                 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-xl-3 animate-in">
+                        <div class="card stat-card h-100">
+                            <div class="card-body">
+                                <div class="kpi-header">
+                                    <div>
+                                        <p class="kpi-label">Conversion</p>
+                                        <h4 class="kpi-value" id="kpiConversion">4.6%</h4>
+                                    </div>
+                                    <div class="icon-wrapper" style="background: rgba(255,193,7,0.15); color: #ffc107;"><i class="bi bi-percent"></i></div>
+                                </div>
+                                <div class="kpi-trend"><span class="trend-up"><i class="bi bi-arrow-up-right"></i>1.2%</span><span class="trend-text">vs last period</span></div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-lg-8 animate-in">
+                        <div class="card chart-card h-100">
+                            <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pt-2 px-3">
+                                <div><h6 class="fw-bold mb-0" style="font-size: 0.9rem;">Revenue Analytics</h6><p class="text-muted mb-0" style="font-size: 0.75rem;">Monthly overview</p></div>
+                                <div class="d-flex gap-1">
+                                    <button class="btn btn-sm btn-outline-primary active" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;" onclick="switchChartType(this, 'line')">Line</button>
+                                    <button class="btn btn-sm btn-outline-primary" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;" onclick="switchChartType(this, 'bar')">Bar</button>
+                                </div>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="chart-container" style="height: 250px;"><canvas id="revenueChart"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 animate-in">
+                        <div class="card chart-card h-100">
+                            <div class="card-header bg-transparent border-0 pt-2 px-3"><h6 class="fw-bold mb-0" style="font-size: 0.9rem;">Traffic Sources</h6></div>
+                            <div class="card-body pt-0">
+                                <div class="chart-container" style="height: 160px;"><canvas id="trafficChart"></canvas></div>
+                                <div class="mt-2">
+                                    <div class="d-flex justify-content-between align-items-center mb-1"><div class="d-flex align-items-center gap-1"><div style="width: 8px; height: 8px; border-radius: 50%; background: #667eea;"></div><span style="font-size: 0.75rem;">Organic</span></div><span style="font-size: 0.75rem; font-weight: 500;">42%</span></div>
+                                    <div class="d-flex justify-content-between align-items-center mb-1"><div class="d-flex align-items-center gap-1"><div style="width: 8px; height: 8px; border-radius: 50%; background: #764ba2;"></div><span style="font-size: 0.75rem;">Social</span></div><span style="font-size: 0.75rem; font-weight: 500;">28%</span></div>
+                                    <div class="d-flex justify-content-between align-items-center"><div class="d-flex align-items-center gap-1"><div style="width: 8px; height: 8px; border-radius: 50%; background: #43e97b;"></div><span style="font-size: 0.75rem;">Direct</span></div><span style="font-size: 0.75rem; font-weight: 500;">30%</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-lg-6 animate-in">
+                        <div class="card chart-card h-100">
+                            <div class="card-header bg-transparent border-0 pt-2 px-3"><h6 class="fw-bold mb-0" style="font-size: 0.9rem;">User Engagement</h6></div>
+                            <div class="card-body pt-0">
+                                <div class="chart-container" style="height: 220px;"><canvas id="engagementChart"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 animate-in">
+                        <div class="card chart-card h-100">
+                            <div class="card-header bg-transparent border-0 pt-2 px-3"><h6 class="fw-bold mb-0" style="font-size: 0.9rem;">Performance Metrics</h6></div>
+                            <div class="card-body pt-0">
+                                <div class="chart-container" style="height: 220px;"><canvas id="radarChart"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-lg-8 animate-in">
+                        <div class="card chart-card">
+                            <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pt-2 px-3">
+                                <h6 class="fw-bold mb-0" style="font-size: 0.9rem;">Recent Transactions</h6>
+                                <button class="btn btn-sm btn-outline-primary" style="font-size: 0.7rem;" onclick="refreshTable()"><i class="bi bi-arrow-clockwise me-1"></i>Refresh</button>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0" id="transactionsTable">
+                                        <thead>
+                                            <tr><th onclick="sortTable(0)" style="font-size: 0.7rem;">ID <i class="bi bi-arrow-down-up"></i></th><th onclick="sortTable(1)" style="font-size: 0.7rem;">Customer <i class="bi bi-arrow-down-up"></i></th><th onclick="sortTable(2)" style="font-size: 0.7rem;">Amount <i class="bi bi-arrow-down-up"></i></th><th onclick="sortTable(3)" style="font-size: 0.7rem;">Status <i class="bi bi-arrow-down-up"></i></th><th onclick="sortTable(4)" style="font-size: 0.7rem;">Date <i class="bi bi-arrow-down-up"></i></th><th style="font-size: 0.7rem;">Actions</th></tr>
+                                        </thead>
+                                        <tbody id="transactionsBody"></tbody>
+                                    </table>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center p-2 border-top">
+                                    <span class="text-muted" style="font-size: 0.75rem;">Showing <span id="tableRange">1-10</span> of <span id="tableTotal">50</span></span>
+                                    <nav><ul class="pagination pagination-sm pagination-custom mb-0" id="tablePagination"></ul></nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 animate-in">
+                        <div class="card chart-card h-100">
+                            <div class="card-header bg-transparent border-0 pt-2 px-3"><h6 class="fw-bold mb-0" style="font-size: 0.9rem;">Activity Heatmap</h6></div>
+                            <div class="card-body pt-0">
+                                <div id="heatmapContainer" class="mb-2"></div>
+                                <div class="d-flex align-items-center gap-1 justify-content-end">
+                                    <span class="text-muted" style="font-size: 0.65rem;">Less</span>
+                                    <div class="heatmap-cell level-0"></div><div class="heatmap-cell level-1"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell level-4"></div>
+                                    <span class="text-muted" style="font-size: 0.65rem;">More</span>
+                                </div>
+                                <hr class="my-2">
+                                <div class="mt-2">
+                                    <div class="d-flex justify-content-between mb-1"><span style="font-size: 0.75rem;">Page Views</span><span style="font-size: 0.75rem; font-weight: 600;">48,295</span></div>
+                                    <div class="progress progress-thin mb-2"><div class="progress-bar" style="width: 78%; background: var(--primary-gradient);"></div></div>
+                                    <div class="d-flex justify-content-between mb-1"><span style="font-size: 0.75rem;">Bounce Rate</span><span style="font-size: 0.75rem; font-weight: 600;">32%</span></div>
+                                    <div class="progress progress-thin mb-0"><div class="progress-bar bg-danger" style="width: 32%;"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-lg-7 animate-in">
+                        <div class="card chart-card h-100">
+                            <div class="card-header bg-transparent border-0 pt-2 px-3"><h6 class="fw-bold mb-0" style="font-size: 0.9rem;">Geographic Distribution</h6></div>
+                            <div class="card-body pt-0">
+                                <div class="row align-items-center">
+                                    <div class="col-md-6">
+                                        <svg class="world-map-svg" viewBox="0 0 800 400">
+                                            <path class="map-region" d="M150,100 L200,80 L250,90 L270,120 L240,160 L200,170 L160,150 Z"></path>
+                                            <path class="map-region" d="M220,180 L240,200 L230,280 L200,300 L180,270 L190,220 Z"></path>
+                                            <path class="map-region" d="M380,80 L450,70 L480,90 L470,130 L430,140 L390,130 L370,100 Z"></path>
+                                            <path class="map-region" d="M380,150 L420,140 L450,180 L440,250 L400,280 L370,250 L360,200 Z"></path>
+                                            <path class="map-region" d="M500,80 L600,70 L680,100 L690,160 L650,200 L580,210 L520,180 L500,130 Z"></path>
+                                            <path class="map-region" d="M600,240 L680,230 L720,250 L710,290 L660,310 L610,280 Z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="region-item"><span>🌎 North America</span><span class="badge bg-primary custom-badge">35%</span></div>
+                                        <div class="region-item"><span>🌍 Europe</span><span class="badge bg-info custom-badge">28%</span></div>
+                                        <div class="region-item"><span>🌏 Asia Pacific</span><span class="badge bg-success custom-badge">42%</span></div>
+                                        <div class="region-item"><span>🌎 South America</span><span class="badge bg-warning custom-badge text-dark">12%</span></div>
+                                        <div class="region-item"><span>🌍 Africa</span><span class="badge bg-secondary custom-badge">8%</span></div>
+                                        <div class="region-item"><span>🌏 Oceania</span><span class="badge bg-dark custom-badge">5%</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 animate-in">
+                        <div class="card chart-card h-100">
+                            <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pt-2 px-3">
+                                <h6 class="fw-bold mb-0" style="font-size: 0.9rem;">Live Activity</h6>
+                                <div class="d-flex align-items-center gap-1"><div class="live-dot"></div><span class="text-success" style="font-size: 0.7rem;">Live</span></div>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="scrollbar-light" style="max-height: 280px; overflow-y: auto;" id="activityFeed"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-12 animate-in">
+                        <div class="card chart-card">
+                            <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pt-2 px-3">
+                                <h6 class="fw-bold mb-0" style="font-size: 0.9rem;">Tasks & Projects</h6>
+                                <button class="btn btn-sm btn-primary" style="font-size: 0.7rem;" onclick="showModal('addTaskModal')"><i class="bi bi-plus-lg me-1"></i>Add Task</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-2">
+                                    <div class="col-md-4">
+                                        <div class="kanban-column" id="todoColumn">
+                                            <h6 class="small fw-bold text-muted text-uppercase mb-2"><i class="bi bi-circle me-1"></i>To Do <span class="badge bg-secondary ms-1" id="todoCount">3</span></h6>
+                                            <div class="task-card" draggable="true"><div class="d-flex justify-content-between mb-1"><span class="badge bg-primary custom-badge">Design</span><i class="bi bi-three-dots text-muted" style="cursor: pointer; font-size: 0.8rem;"></i></div><p style="font-size: 0.8rem; font-weight: 500; margin-bottom: 0.2rem;">Redesign landing page</p><div class="d-flex justify-content-between align-items-center"><span class="text-muted" style="font-size: 0.65rem;">Due Mar 15</span></div></div>
+                                            <div class="task-card" draggable="true"><div class="d-flex justify-content-between mb-1"><span class="badge bg-success custom-badge">Feature</span><i class="bi bi-three-dots text-muted" style="cursor: pointer; font-size: 0.8rem;"></i></div><p style="font-size: 0.8rem; font-weight: 500; margin-bottom: 0.2rem;">API integration</p><div class="d-flex justify-content-between align-items-center"><span class="text-muted" style="font-size: 0.65rem;">Due Mar 20</span></div></div>
+                                            <div class="task-card" draggable="true"><div class="d-flex justify-content-between mb-1"><span class="badge bg-warning custom-badge text-dark">Bug</span><i class="bi bi-three-dots text-muted" style="cursor: pointer; font-size: 0.8rem;"></i></div><p style="font-size: 0.8rem; font-weight: 500; margin-bottom: 0.2rem;">Fix mobile nav bug</p><div class="d-flex justify-content-between align-items-center"><span class="text-muted" style="font-size: 0.65rem;">Due Mar 12</span></div></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="kanban-column" id="progressColumn">
+                                            <h6 class="small fw-bold text-warning text-uppercase mb-2"><i class="bi bi-arrow-right-circle me-1"></i>In Progress <span class="badge bg-warning ms-1" id="progressCount">2</span></h6>
+                                            <div class="task-card" draggable="true"><div class="d-flex justify-content-between mb-1"><span class="badge bg-info custom-badge">Analytics</span><i class="bi bi-three-dots text-muted" style="cursor: pointer; font-size: 0.8rem;"></i></div><p style="font-size: 0.8rem; font-weight: 500; margin-bottom: 0.2rem;">Build dashboard</p><div class="d-flex justify-content-between align-items-center"><span class="text-muted" style="font-size: 0.65rem;">Due Mar 10</span></div></div>
+                                            <div class="task-card" draggable="true"><div class="d-flex justify-content-between mb-1"><span class="badge bg-danger custom-badge">Urgent</span><i class="bi bi-three-dots text-muted" style="cursor: pointer; font-size: 0.8rem;"></i></div><p style="font-size: 0.8rem; font-weight: 500; margin-bottom: 0.2rem;">DB migration</p><div class="d-flex justify-content-between align-items-center"><span class="text-muted" style="font-size: 0.65rem;">Due Mar 8</span></div></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="kanban-column" id="doneColumn">
+                                            <h6 class="small fw-bold text-success text-uppercase mb-2"><i class="bi bi-check-circle me-1"></i>Completed <span class="badge bg-success ms-1" id="doneCount">2</span></h6>
+                                            <div class="task-card" draggable="true"><div class="d-flex justify-content-between mb-1"><span class="badge bg-secondary custom-badge">Security</span><i class="bi bi-three-dots text-muted" style="cursor: pointer; font-size: 0.8rem;"></i></div><p style="font-size: 0.8rem; font-weight: 500; margin-bottom: 0.2rem;">SSL renewal</p><div class="d-flex justify-content-between align-items-center"><span class="text-success" style="font-size: 0.65rem;"><i class="bi bi-check-lg"></i>Done</span></div></div>
+                                            <div class="task-card" draggable="true"><div class="d-flex justify-content-between mb-1"><span class="badge bg-primary custom-badge">Design</span><i class="bi bi-three-dots text-muted" style="cursor: pointer; font-size: 0.8rem;"></i></div><p style="font-size: 0.8rem; font-weight: 500; margin-bottom: 0.2rem;">Component library</p><div class="d-flex justify-content-between align-items-center"><span class="text-success" style="font-size: 0.65rem;"><i class="bi bi-check-lg"></i>Done</span></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-analytics" class="section-content" style="display:none;">
+                <div class="animate-in"><h5 class="fw-bold mb-0">Analytics</h5><p class="text-muted mb-3" style="font-size: 0.85rem;">Deep dive into metrics</p>
+                    <div class="row g-3">
+                        <div class="col-md-6"><div class="card chart-card"><div class="card-body"><h6 class="fw-bold mb-2" style="font-size: 0.85rem;">Conversion Funnel</h6><canvas id="funnelChart" height="200"></canvas></div></div></div>
+                        <div class="col-md-6"><div class="card chart-card"><div class="card-body"><h6 class="fw-bold mb-2" style="font-size: 0.85rem;">User Cohorts</h6><canvas id="cohortChart" height="200"></canvas></div></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-reports" class="section-content" style="display:none;">
+                <div class="animate-in"><h5 class="fw-bold mb-0">Reports</h5><p class="text-muted mb-3" style="font-size: 0.85rem;">Generate and manage reports</p>
+                    <div class="card chart-card"><div class="card-body">
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-3"><label class="form-label small">Report Type</label><select class="form-select form-select-sm"><option>Revenue Report</option><option>User Activity Report</option><option>Sales Report</option></select></div>
+                            <div class="col-md-2"><label class="form-label small">Start Date</label><input type="date" class="form-control form-control-sm" value="2024-01-01"></div>
+                            <div class="col-md-2"><label class="form-label small">End Date</label><input type="date" class="form-control form-control-sm" value="2024-12-31"></div>
+                            <div class="col-md-2 d-flex align-items-end"><button class="btn btn-primary btn-sm w-100" onclick="generateReport()">Generate</button></div>
+                        </div>
+                        <div id="reportPreview" style="display:none;"><hr><div class="chart-container" style="height: 250px;"><canvas id="reportChart"></canvas></div></div>
+                    </div></div>
+                </div>
+            </div>
+
+            <div id="section-users" class="section-content" style="display:none;">
+                <div class="animate-in"><h5 class="fw-bold mb-0">User Management</h5><p class="text-muted mb-3" style="font-size: 0.85rem;">Manage team members</p>
+                    <div class="card chart-card"><div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead><tr><th style="font-size: 0.7rem;">User</th><th style="font-size: 0.7rem;">Role</th><th style="font-size: 0.7rem;">Status</th><th style="font-size: 0.7rem;">Actions</th></tr></thead>
+                                <tbody>
+                                    <tr><td><div class="d-flex align-items-center gap-2"><div style="width: 28px; height: 28px; border-radius: 50%; background: #667eea; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: bold;">SW</div><div><div style="font-size: 0.8rem; font-weight: 500;">Sarah Wilson</div><div class="text-muted" style="font-size: 0.7rem;">sarah@co.com</div></div></div></td><td><span class="badge bg-primary custom-badge">Admin</span></td><td><span class="badge bg-success custom-badge">Active</span></td><td><button class="btn btn-sm btn-light"><i class="bi bi-pencil"></i></button></td></tr>
+                                    <tr><td><div class="d-flex align-items-center gap-2"><div style="width: 28px; height: 28px; border-radius: 50%; background: #198754; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: bold;">MB</div><div><div style="font-size: 0.8rem; font-weight: 500;">Mike Brown</div><div class="text-muted" style="font-size: 0.7rem;">mike@co.com</div></div></div></td><td><span class="badge bg-info custom-badge">Editor</span></td><td><span class="badge bg-success custom-badge">Active</span></td><td><button class="btn btn-sm btn-light"><i class="bi bi-pencil"></i></button></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div></div>
+                </div>
+            </div>
+
+            <div id="section-projects" class="section-content" style="display:none;">
+                <div class="animate-in"><h5 class="fw-bold mb-0">Projects</h5><p class="text-muted mb-3" style="font-size: 0.85rem;">Active projects</p>
+                    <div class="row g-2">
+                        <div class="col-md-6 col-lg-4"><div class="card chart-card h-100"><div class="card-body"><div class="d-flex justify-content-between mb-2"><span class="badge bg-primary custom-badge">Active</span><small class="text-muted">Due Mar 25</small></div><h6 class="fw-bold mb-1" style="font-size: 0.9rem;">Website Redesign</h6><p class="small text-muted mb-2">Complete overhaul of company website.</p><div class="d-flex justify-content-between small mb-1"><span>Progress</span><span class="fw-bold">72%</span></div><div class="progress progress-thin mb-0"><div class="progress-bar" style="width: 72%; background: var(--primary-gradient);"></div></div></div></div></div>
+                        <div class="col-md-6 col-lg-4"><div class="card chart-card h-100"><div class="card-body"><div class="d-flex justify-content-between mb-2"><span class="badge bg-warning custom-badge text-dark">In Review</span><small class="text-muted">Due Mar 18</small></div><h6 class="fw-bold mb-1" style="font-size: 0.9rem;">Mobile App v2.0</h6><p class="small text-muted mb-2">Major update with new features.</p><div class="d-flex justify-content-between small mb-1"><span>Progress</span><span class="fw-bold">89%</span></div><div class="progress progress-thin mb-0"><div class="progress-bar bg-warning" style="width: 89%;"></div></div></div></div></div>
+                        <div class="col-md-6 col-lg-4"><div class="card chart-card h-100"><div class="card-body"><div class="d-flex justify-content-between mb-2"><span class="badge bg-info custom-badge">Planning</span><small class="text-muted">Due Apr 30</small></div><h6 class="fw-bold mb-1" style="font-size: 0.9rem;">API Gateway</h6><p class="small text-muted mb-2">Centralized API management system.</p><div class="d-flex justify-content-between small mb-1"><span>Progress</span><span class="fw-bold">25%</span></div><div class="progress progress-thin mb-0"><div class="progress-bar bg-info" style="width: 25%;"></div></div></div></div></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal fade" id="settingsModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content">
+        <div class="modal-header border-0 pb-0"><h6 class="modal-title fw-bold">Settings</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+            <div class="form-check form-switch mb-2"><input class="form-check-input" type="checkbox" id="emailNotif" checked><label class="form-check-label small" for="emailNotif">Email Notifications</label></div>
+            <div class="form-check form-switch mb-2"><input class="form-check-input" type="checkbox" id="pushNotif" checked><label class="form-check-label small" for="pushNotif">Push Notifications</label></div>
+            <div class="mb-2"><label class="form-label small fw-medium">Currency</label><select class="form-select form-select-sm"><option>USD ($)</option><option>EUR (€)</option><option>GBP (£)</option></select></div>
+        </div>
+        <div class="modal-footer border-0 pt-0"><button class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button><button class="btn btn-sm btn-primary" data-bs-dismiss="modal">Save</button></div>
+    </div></div></div>
+
+    <div class="modal fade" id="helpModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content">
+        <div class="modal-header border-0 pb-0"><h6 class="modal-title fw-bold">Help Center</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+            <div class="accordion" id="helpAccordion">
+                <div class="accordion-item border-0 mb-2"><h2 class="accordion-header"><button class="accordion-button collapsed small fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#help1">How do I export my data?</button></h2><div id="help1" class="accordion-collapse collapse" data-bs-parent="#helpAccordion"><div class="accordion-body small text-muted">Click the Export button in the top bar or use the Export menu in the sidebar.</div></div></div>
+                <div class="accordion-item border-0"><h2 class="accordion-header"><button class="accordion-button collapsed small fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#help2">How often is data refreshed?</button></h2><div id="help2" class="accordion-collapse collapse" data-bs-parent="#helpAccordion"><div class="accordion-body small text-muted">Dashboard data refreshes every 5 minutes automatically.</div></div></div>
+            </div>
+        </div>
+    </div></div></div>
+
+    <div class="modal fade" id="addTaskModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content">
+        <div class="modal-header border-0 pb-0"><h6 class="modal-title fw-bold">Add Task</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+            <div class="mb-2"><label class="form-label small fw-medium">Title</label><input type="text" class="form-control form-control-sm" id="taskTitle"></div>
+            <div class="mb-2"><label class="form-label small fw-medium">Description</label><textarea class="form-control form-control-sm" id="taskDesc" rows="2"></textarea></div>
+            <div class="row g-2"><div class="col-6"><label class="form-label small fw-medium">Priority</label><select class="form-select form-select-sm" id="taskPriority"><option value="bg-primary">Low</option><option value="bg-warning">Medium</option><option value="bg-danger">High</option></select></div><div class="col-6"><label class="form-label small fw-medium">Due Date</label><input type="date" class="form-control form-control-sm" id="taskDue"></div></div>
+        </div>
+        <div class="modal-footer border-0 pt-0"><button class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button><button class="btn btn-sm btn-primary" onclick="addTask()">Add</button></div>
+    </div></div></div>
+
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100" id="toastContainer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script>
+        let currentTheme = 'light'; let currentSection = 'dashboard'; let sidebarCollapsed = false; let chartInstances = {}; let tableCurrentPage = 1; const tablePageSize = 10; let allTransactions = [];
+
+        document.addEventListener('DOMContentLoaded', () => { initCharts(); initSparklines(); populateTransactions(); initHeatmap(); initActivityFeed(); initKanban(); setInterval(updateLiveMetrics, 8000); });
+
+        function toggleDarkMode() { currentTheme = currentTheme === 'light' ? 'dark' : 'light'; document.documentElement.setAttribute('data-bs-theme', currentTheme); document.getElementById('themeIcon').className = currentTheme === 'light' ? 'bi bi-moon-stars' : 'bi bi-sun'; updateChartsTheme(); }
+        function toggleSidebar() { const sidebar = document.getElementById('sidebar'); const main = document.getElementById('mainContent'); const overlay = document.getElementById('sidebarOverlay'); if (window.innerWidth < 992) { sidebar.classList.toggle('show-mobile'); overlay.classList.toggle('show'); } else { sidebarCollapsed = !sidebarCollapsed; sidebar.classList.toggle('collapsed'); main.classList.toggle('expanded'); } }
+        document.getElementById('sidebarOverlay').addEventListener('click', () => { document.getElementById('sidebar').classList.remove('show-mobile'); document.getElementById('sidebarOverlay').classList.remove('show'); });
+
+        function switchSection(section, el) { currentSection = section; document.querySelectorAll('.section-content').forEach(s => s.style.display = 'none'); document.getElementById('section-' + section).style.display = 'block'; document.querySelectorAll('.sidebar .nav-link').forEach(n => n.classList.remove('active')); if (el) el.classList.add('active'); if (window.innerWidth < 992) { document.getElementById('sidebar').classList.remove('show-mobile'); document.getElementById('sidebarOverlay').classList.remove('show'); } if (section === 'analytics') setTimeout(() => { if (!chartInstances.funnel) initFunnelChart(); if (!chartInstances.cohort) initCohortChart(); }, 100); }
+
+        function getThemeColors() { const isDark = currentTheme === 'dark'; return { gridColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)', textColor: isDark ? '#adb5bd' : '#6c757d' }; }
+
+        function initCharts() {
+            const theme = getThemeColors(); const tooltipOpts = { backgroundColor: currentTheme === 'dark' ? '#343a40' : '#fff', titleColor: currentTheme === 'dark' ? '#fff' : '#212529', bodyColor: currentTheme === 'dark' ? '#adb5bd' : '#6c757d', borderColor: currentTheme === 'dark' ? '#495057' : '#dee2e6', borderWidth: 1, cornerRadius: 6, padding: 8 };
+            const legendOpts = { display: true, position: 'top', labels: { usePointStyle: true, pointStyle: 'circle', padding: 15, color: theme.textColor, font: { size: 11 } } };
+
+            chartInstances.revenue = new Chart(document.getElementById('revenueChart').getContext('2d'), { type: 'line', data: { labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], datasets: [ { label: 'Revenue', data: [18500,22300,19800,27500,32100,28900,35200,38400,34600,42100,39800,48295], borderColor: '#667eea', backgroundColor: 'rgba(102,126,234,0.1)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 2, pointHoverRadius: 5 }, { label: 'Expenses', data: [12000,14500,13200,16800,19200,17500,21000,22800,20400,24500,23100,27200], borderColor: '#fa709a', backgroundColor: 'rgba(250,112,154,0.05)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 2, pointHoverRadius: 5, borderDash: [4,4] } ] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: legendOpts, tooltip: tooltipOpts }, scales: { x: { grid: { color: theme.gridColor }, ticks: { color: theme.textColor, font: { size: 10 } } }, y: { grid: { color: theme.gridColor }, ticks: { color: theme.textColor, callback: v => '$'+(v/1000)+'k', font: { size: 10 } } } }, interaction: { intersect: false, mode: 'index' } } });
+
+            chartInstances.traffic = new Chart(document.getElementById('trafficChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Organic','Social','Direct'], datasets: [{ data: [42,28,30], backgroundColor: ['#667eea','#764ba2','#43e97b'], borderWidth: 0, hoverOffset: 6 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { display: false }, tooltip: tooltipOpts } } });
+
+            chartInstances.engagement = new Chart(document.getElementById('engagementChart').getContext('2d'), { type: 'bar', data: { labels: ['00:00','04:00','08:00','12:00','16:00','20:00','24:00'], datasets: [ { label: 'Active', data: [420,280,1850,3200,2890,2450,1200], backgroundColor: 'rgba(102,126,234,0.7)', borderRadius: 5 }, { label: 'Sessions', data: [680,450,2800,4500,3800,3200,1800], backgroundColor: 'rgba(67,233,123,0.7)', borderRadius: 5 } ] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { usePointStyle: true, pointStyle: 'circle', padding: 12, color: theme.textColor, font: { size: 10 } } }, tooltip: tooltipOpts }, scales: { x: { grid: { display: false }, ticks: { color: theme.textColor, font: { size: 10 } } }, y: { grid: { color: theme.gridColor }, ticks: { color: theme.textColor, font: { size: 10 } } } } } });
+
+            chartInstances.radar = new Chart(document.getElementById('radarChart').getContext('2d'), { type: 'radar', data: { labels: ['Speed','Reliability','Comfort','Safety','Efficiency','Design'], datasets: [ { label: 'Current', data: [85,92,78,95,88,82], backgroundColor: 'rgba(102,126,234,0.2)', borderColor: '#667eea', borderWidth: 2, pointRadius: 3 }, { label: 'Previous', data: [72,85,68,88,75,70], backgroundColor: 'rgba(250,112,154,0.2)', borderColor: '#fa709a', borderWidth: 2, pointRadius: 3, borderDash: [4,4] } ] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { usePointStyle: true, pointStyle: 'circle', padding: 12, color: theme.textColor, font: { size: 10 } } }, tooltip: tooltipOpts }, scales: { r: { grid: { color: theme.gridColor }, pointLabels: { color: theme.textColor, font: { size: 10 } }, ticks: { display: false }, suggestedMin: 0, suggestedMax: 100 } } } });
+        }
+
+        function initSparklines() { createSparkline('sparkline1', [30,45,35,50,40,60,55,70,65,80,75,90], '#667eea'); createSparkline('sparkline2', [20,35,30,45,50,40,55,60,65,70,80,85], '#198754'); createSparkline('sparkline3', [60,55,50,45,40,35,38,42,45,40,38,35], '#dc3545'); createSparkline('sparkline4', [20,25,22,30,28,35,32,38,40,38,42,46], '#ffc107'); }
+
+        function createSparkline(canvasId, data, color) { const ctx = document.getElementById(canvasId); if (!ctx) return; new Chart(ctx, { type: 'line', data: { labels: data.map((_,i)=>i), datasets: [{ data: data, borderColor: color, backgroundColor: 'transparent', borderWidth: 2, tension: 0.4, pointRadius: 0, fill: false }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { enabled: false } }, scales: { x: { display: false }, y: { display: false } }, elements: { line: { capBezierPoints: true } } } }); }
+
+        function initFunnelChart() { const ctx = document.getElementById('funnelChart'); if (!ctx) return; const theme = getThemeColors(); chartInstances.funnel = new Chart(ctx, { type: 'bar', data: { labels: ['Visitors','Sign-ups','Active','Paying','Retention'], datasets: [{ label: 'Users', data: [45000,18000,12000,4500,3200], backgroundColor: ['#667eea','#764ba2','#43e97b','#fa709a','#ffc107'], borderRadius: 5 }] }, options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { backgroundColor: currentTheme === 'dark' ? '#343a40' : '#fff', titleColor: currentTheme === 'dark' ? '#fff' : '#212529', bodyColor: currentTheme === 'dark' ? '#adb5bd' : '#6c757d', borderColor: currentTheme === 'dark' ? '#495057' : '#dee2e6', borderWidth: 1, cornerRadius: 6 } }, scales: { x: { grid: { color: theme.gridColor }, ticks: { color: theme.textColor } }, y: { grid: { display: false }, ticks: { color: theme.textColor } } } } }); }
+
+        function initCohortChart() { const ctx = document.getElementById('cohortChart'); if (!ctx) return; const theme = getThemeColors(); chartInstances.cohort = new Chart(ctx, { type: 'line', data: { labels: ['W1','W2','W3','W4','W5','W6','W7','W8'], datasets: [ { label: 'Jan', data: [100,78,62,52,45,40,38,35], borderColor: '#667eea', tension: 0.3, borderWidth: 2, pointRadius: 2 }, { label: 'Feb', data: [100,72,55,48,42,38,35,32], borderColor: '#764ba2', tension: 0.3, borderWidth: 2, pointRadius: 2 }, { label: 'Mar', data: [100,82,68,58,50,45,42,38], borderColor: '#43e97b', tension: 0.3, borderWidth: 2, pointRadius: 2 } ] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { usePointStyle: true, pointStyle: 'circle', padding: 12, color: theme.textColor, font: { size: 10 } } }, tooltip: { backgroundColor: currentTheme === 'dark' ? '#343a40' : '#fff', titleColor: currentTheme === 'dark' ? '#fff' : '#212529', bodyColor: currentTheme === 'dark' ? '#adb5bd' : '#6c757d', borderColor: currentTheme === 'dark' ? '#495057' : '#dee2e6', borderWidth: 1, cornerRadius: 6, callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.raw + '%' } } }, scales: { x: { grid: { color: theme.gridColor }, ticks: { color: theme.textColor } }, y: { grid: { color: theme.gridColor }, ticks: { color: theme.textColor, callback: v => v+'%' }, min: 0, max: 100 } } } }); }
+
+        function switchChartType(btn, type) { btn.parentElement.querySelectorAll('.btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); const chart = chartInstances.revenue; chart.config.type = type; chart.update(); }
+
+        function updateChartsTheme() { const theme = getThemeColors(); Object.values(chartInstances).forEach(chart => { if (chart.options.scales?.x) { chart.options.scales.x.grid.color = theme.gridColor; chart.options.scales.x.ticks.color = theme.textColor; } if (chart.options.scales?.y) { chart.options.scales.y.grid.color = theme.gridColor; chart.options.scales.y.ticks.color = theme.textColor; } if (chart.options.plugins?.legend?.labels) chart.options.plugins.legend.labels.color = theme.textColor; chart.options.plugins.tooltip.backgroundColor = currentTheme === 'dark' ? '#343a40' : '#fff'; chart.options.plugins.tooltip.titleColor = currentTheme === 'dark' ? '#fff' : '#212529'; chart.options.plugins.tooltip.bodyColor = currentTheme === 'dark' ? '#adb5bd' : '#6c757d'; chart.options.plugins.tooltip.borderColor = currentTheme === 'dark' ? '#495057' : '#dee2e6'; chart.update(); }); }
+
+        function populateTransactions() { const statuses = ['Completed','Pending','Processing','Failed','Refunded']; const statusColors = {'Completed':'bg-success','Pending':'bg-warning text-dark','Processing':'bg-info','Failed':'bg-danger','Refunded':'bg-secondary'}; const names = ['Alice Johnson','Bob Smith','Carol Davis','David Wilson','Eva Martinez','Frank Brown','Grace Lee','Henry Taylor','Ivy Chen','Jack White','Karen Hall','Leo Garcia','Mia Anderson','Noah Thomas','Olivia Jackson','Paul Harris','Quinn Martin','Rachel Clark','Sam Lewis','Tina Walker','Uma Patel','Victor Young','Wendy King','Xander Scott','Yara Adams','Zack Nelson','Amy Roberts','Brian Turner','Cindy Phillips','Derek Campbell','Elena Parker','Felix Evans','Gina Edwards','Hugo Collins','Irene Stewart','Joel Sanchez','Kim Morris','Liam Rogers','Maya Reed','Nate Cook','Opal Morgan','Pete Bell','Quinn Murphy','Rosa Bailey','Steve Rivera','Tara Cooper','Uri Richardson','Vera Cox','Will Howard','Xena Ward']; allTransactions = names.map((name,i) => { const status = statuses[Math.floor(Math.random()*statuses.length)]; return { id: '#'+(1000+i), customer: name, amount: '$'+(Math.floor(Math.random()*900)+50)+'.'+(Math.floor(Math.random()*99)).toString().padStart(2,'0'), status: status, statusColor: statusColors[status], date: new Date(2024,Math.floor(Math.random()*12),Math.floor(Math.random()*28)+1).toLocaleDateString('en-US',{month:'short',day:'numeric'}) }; }); renderTable(); }
+
+        function renderTable() { const start = (tableCurrentPage-1)*tablePageSize; const end = start+tablePageSize; const pageData = allTransactions.slice(start,end); const tbody = document.getElementById('transactionsBody'); tbody.innerHTML = pageData.map(t => `<tr><td style="font-size: 0.8rem;"><span class="fw-medium">${t.id}</span></td><td style="font-size: 0.8rem;">${t.customer}</td><td style="font-size: 0.8rem; font-weight: 500;">${t.amount}</td><td><span class="badge ${t.statusColor} custom-badge">${t.status}</span></td><td style="font-size: 0.75rem; color: var(--bs-secondary-color);">${t.date}</td><td><div class="btn-group btn-group-sm"><button class="btn btn-light" title="View"><i class="bi bi-eye"></i></button><button class="btn btn-light" title="Edit"><i class="bi bi-pencil"></i></button><button class="btn btn-light text-danger" title="Delete" onclick="deleteTransaction('${t.id}')"><i class="bi bi-trash"></i></button></div></td></tr>`).join(''); document.getElementById('tableRange').textContent = `${start+1}-${Math.min(end,allTransactions.length)}`; document.getElementById('tableTotal').textContent = allTransactions.length; renderPagination(); }
+
+        function renderPagination() { const totalPages = Math.ceil(allTransactions.length/tablePageSize); const pagination = document.getElementById('tablePagination'); let html = ''; html += `<li class="page-item ${tableCurrentPage===1?'disabled':''}"><a class="page-link" href="#" onclick="goToPage(${tableCurrentPage-1})"><i class="bi bi-chevron-left"></i></a></li>`; for (let i=1; i<=totalPages; i++) { if (i===1 || i===totalPages || (i>=tableCurrentPage-1 && i<=tableCurrentPage+1)) { html += `<li class="page-item ${i===tableCurrentPage?'active':''}"><a class="page-link" href="#" onclick="goToPage(${i})">${i}</a></li>`; } else if (i===tableCurrentPage-2 || i===tableCurrentPage+2) { html += `<li class="page-item disabled"><a class="page-link" href="#">...</a></li>`; } } html += `<li class="page-item ${tableCurrentPage===totalPages?'disabled':''}"><a class="page-link" href="#" onclick="goToPage(${tableCurrentPage+1})"><i class="bi bi-chevron-right"></i></a></li>`; pagination.innerHTML = html; }
+
+        function goToPage(page) { const totalPages = Math.ceil(allTransactions.length/tablePageSize); if (page<1 || page>totalPages) return; tableCurrentPage = page; renderTable(); }
+        function sortTable(colIndex) { const keys = ['id','customer','amount','status','date']; const key = keys[colIndex]; allTransactions.sort((a,b) => { let va=a[key], vb=b[key]; if (key==='amount') { va=parseFloat(va.replace('$','')); vb=parseFloat(vb.replace('$','')); } if (va<vb) return -1; if (va>vb) return 1; return 0; }); tableCurrentPage=1; renderTable(); }
+        function deleteTransaction(id) { allTransactions = allTransactions.filter(t => t.id!==id); renderTable(); showToast('Deleted '+id, 'danger'); }
+        function refreshTable() { const btn = event.target.closest('button'); btn.querySelector('i').classList.add('bi-spin'); setTimeout(() => { btn.querySelector('i').classList.remove('bi-spin'); populateTransactions(); showToast('Refreshed', 'success'); }, 600); }
+
+        function initHeatmap() { const container = document.getElementById('heatmapContainer'); let html = '<div class="heatmap-grid">'; for (let week=0; week<26; week++) { html += '<div class="heatmap-week">'; for (let day=0; day<7; day++) { html += `<div class="heatmap-cell level-${Math.floor(Math.random()*5)}" title="${Math.floor(Math.random()*20)} contributions"></div>`; } html += '</div>'; } html += '</div>'; container.innerHTML = html; }
+
+        function initActivityFeed() { const feed = document.getElementById('activityFeed'); const activities = [ { icon: 'bi-cart-check-fill', color: 'success', title: 'New order #4521', desc: '$249.00 — 2m ago' }, { icon: 'bi-person-plus-fill', color: 'primary', title: 'New user registered', desc: 'sarah@co.com — 5m ago' }, { icon: 'bi-star-fill', color: 'warning', title: '5-star review', desc: 'From @mike — 12m ago' }, { icon: 'bi-arrow-up-circle-fill', color: 'info', title: 'Campaign started', desc: 'Spring Sale — 20m ago' }, { icon: 'bi-exclamation-triangle-fill', color: 'danger', title: 'Payment failed', desc: 'Order #4498 — 30m ago' }, { icon: 'bi-check-circle-fill', color: 'success', title: 'Deployed v2.4.1', desc: '45m ago' }, ]; feed.innerHTML = activities.map(a => `<div class="activity-item px-3"><div class="d-flex align-items-start gap-2"><div class="activity-icon bg-${a.color} bg-opacity-10 text-${a.color}"><i class="bi ${a.icon}"></i></div><div><div style="font-size: 0.8rem; font-weight: 500;">${a.title}</div><div class="text-muted" style="font-size: 0.7rem;">${a.desc}</div></div></div></div>`).join(''); }
+
+        function updateLiveMetrics() { const rev = document.getElementById('kpiRevenue'); if (rev) { const val = parseFloat(rev.textContent.replace(/[$,]/g,'')); rev.textContent = '$' + (val + Math.floor(Math.random()*100-30)).toLocaleString(); } const usr = document.getElementById('kpiUsers'); if (usr) { const val = parseInt(usr.textContent.replace(/,/g,'')); usr.textContent = (val + Math.floor(Math.random()*5-1)).toLocaleString(); } }
+
+        function initKanban() { ['todoColumn','progressColumn','doneColumn'].forEach(colId => { const column = document.getElementById(colId); column.addEventListener('dragover', e => { e.preventDefault(); column.style.background = currentTheme==='dark'?'rgba(102,126,234,0.15)':'rgba(102,126,234,0.08)'; }); column.addEventListener('dragleave', () => { column.style.background = ''; }); column.addEventListener('drop', e => { e.preventDefault(); column.style.background = ''; const task = document.querySelector('.dragging'); if (task) { column.appendChild(task); updateKanbanCounts(); } }); }); document.querySelectorAll('.task-card').forEach(card => { card.addEventListener('dragstart', () => card.classList.add('dragging')); card.addEventListener('dragend', () => card.classList.remove('dragging')); }); }
+        function updateKanbanCounts() { document.getElementById('todoCount').textContent = document.getElementById('todoColumn').querySelectorAll('.task-card').length; document.getElementById('progressCount').textContent = document.getElementById('progressColumn').querySelectorAll('.task-card').length; document.getElementById('doneCount').textContent = document.getElementById('doneColumn').querySelectorAll('.task-card').length; }
+
+        function addTask() { const title = document.getElementById('taskTitle').value; const desc = document.getElementById('taskDesc').value; const priority = document.getElementById('taskPriority').value; const due = document.getElementById('taskDue').value; if (!title) { showToast('Enter a title', 'warning'); return; } const html = `<div class="task-card fade-in" draggable="true"><div class="d-flex justify-content-between mb-1"><span class="badge ${priority} custom-badge">New</span><i class="bi bi-three-dots text-muted" style="cursor: pointer; font-size: 0.8rem;"></i></div><p style="font-size: 0.8rem; font-weight: 500; margin-bottom: 0.2rem;">${title}</p><p class="text-muted mb-1" style="font-size: 0.7rem;">${desc}</p><div class="d-flex justify-content-between align-items-center"><span class="text-muted" style="font-size: 0.65rem;">Due ${due||'TBD'}</span></div></div>`; document.getElementById('todoColumn').insertAdjacentHTML('beforeend', html); const newCard = document.getElementById('todoColumn').lastElementChild; newCard.addEventListener('dragstart', () => newCard.classList.add('dragging')); newCard.addEventListener('dragend', () => newCard.classList.remove('dragging')); updateKanbanCounts(); bootstrap.Modal.getInstance(document.getElementById('addTaskModal')).hide(); document.getElementById('taskTitle').value = ''; document.getElementById('taskDesc').value = ''; document.getElementById('taskDue').value = ''; showToast('Task added', 'success'); }
+
+        function toggleNotifications() { const dropdown = document.getElementById('notifDropdown'); dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none'; }
+        function clearNotifications() { document.getElementById('notifCount').style.display = 'none'; showToast('All read', 'success'); }
+        document.addEventListener('click', (e) => { const dropdown = document.getElementById('notifDropdown'); const btn = document.querySelector('[onclick="toggleNotifications()"]'); if (!dropdown.contains(e.target) && !btn.contains(e.target)) dropdown.style.display = 'none'; });
+
+        function setDateRange(btn) { btn.parentElement.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); showToast('Date range updated', 'info'); }
+        function exportData(format) { showToast(`Exporting as ${format.toUpperCase()}...`, 'info'); setTimeout(() => showToast(`Exported ${format.toUpperCase()}`, 'success'), 1200); }
+        function generateReport() { document.getElementById('reportPreview').style.display = 'block'; showToast('Report generated', 'success'); if (!chartInstances.report) { const ctx = document.getElementById('reportChart'); const theme = getThemeColors(); chartInstances.report = new Chart(ctx, { type: 'line', data: { labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], datasets: [{ label: 'Report', data: Array.from({length:12},()=>Math.floor(Math.random()*50000+10000)), borderColor: '#667eea', backgroundColor: 'rgba(102,126,234,0.1)', fill: true, tension: 0.4, borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: currentTheme==='dark'?'#343a40':'#fff', titleColor: currentTheme==='dark'?'#fff':'#212529', bodyColor: currentTheme==='dark'?'#adb5bd':'#6c757d', borderColor: currentTheme==='dark'?'#495057':'#dee2e6', borderWidth: 1, cornerRadius: 6 } }, scales: { x: { grid: { color: theme.gridColor }, ticks: { color: theme.textColor } }, y: { grid: { color: theme.gridColor }, ticks: { color: theme.textColor } } } } }); } }
+        function showModal(id) { new bootstrap.Modal(document.getElementById(id)).show(); }
+        function showToast(msg, type='info') { const container = document.getElementById('toastContainer'); const icons = {success:'bi-check-circle-fill',danger:'bi-x-circle-fill',warning:'bi-exclamation-triangle-fill',info:'bi-info-circle-fill'}; const id = 'toast-'+Date.now(); const html = `<div id="${id}" class="toast align-items-center text-bg-${type} border-0 show mb-2" style="min-width: 260px;"><div class="d-flex"><div class="toast-body small"><i class="bi ${icons[type]} me-2"></i>${msg}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div></div>`; container.insertAdjacentHTML('beforeend', html); setTimeout(() => { const el = document.getElementById(id); if (el) el.remove(); }, 2500); }
+    </script>
+</body>
+</html>
+
