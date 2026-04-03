@@ -8,7 +8,9 @@
 ![](https://img.shields.io/badge/Topic-Github-lighred)
 ![](https://img.shields.io/website?url=https%3A%2F%2Fgithub.com%2Fmscbuild)
 
-<img width="1400" height="520" alt="image" src="https://github.com/user-attachments/assets/9a2a88e8-ab84-47e3-b001-e72f4ab14e28" />
+<img width="1400" height="520" alt="analysis" src="https://github.com/user-attachments/assets/9a2a88e8-ab84-47e3-b001-e72f4ab14e28" />
+<img width="1351" height="640" alt="dashboard" src="https://github.com/user-attachments/assets/54646449-811c-46b6-97d7-1f0b74bb99ff" />
+
 
 
 >Dive into the world of insights with our collection of projects! Uncover patterns, trends, and make data-driven decisions
