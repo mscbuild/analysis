@@ -1,3 +1,5 @@
+[demo]: https://mscbuild.github.io/analysis/
+
 # Date analysis
 ![](https://komarev.com/ghpvc/?username=mscbuild) 
  ![](https://img.shields.io/github/license/mscbuild/e-learning) 
@@ -12,6 +14,7 @@
 <img width="1351" height="640" alt="dashboard" src="https://github.com/user-attachments/assets/54646449-811c-46b6-97d7-1f0b74bb99ff" />
  
  -----
+##### [ View Live Preview][demo]
 
 >Dive into the world of insights with our collection of projects! Uncover patterns, trends, and make data-driven decisions
 
