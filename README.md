@@ -103,7 +103,9 @@ Here are some examples of analyses included in the repository:
 - Feel free to customize and expand it further as per your project needs!
 
 
-
+<!--
+keywords: n8n workflows, n8n automation, n8n examples, n8n templates, no-code automation, telegram bot workflows, openai n8n, webhook automation, best proyect, creative repo, awesome, star repo, mscbuild, YuriDev
+-->
  
 
 
